@@ -1,0 +1,46 @@
+name: Deploy to Firebase Functions on merge
+on:
+  push:
+    branches:
+      - master
+jobs:
+  build_and_deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 24
+
+      - name: Cache npm Dependencies
+        uses: actions/cache@v4
+        id: cache-npm
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+
+      - name: Install npm Dependencies
+        run: npm i
+        working-directory: functions
+
+        # echo "GITHUB_WORKSPACE: $GITHUB_WORKSPACE"
+        # export GOOGLE_APPLICATION_CREDENTIALS=$GITHUB_WORKSPACE/gcp_credentials.json
+      - name: Create file - gcp_credentials.json
+        run: |
+          echo '${{ secrets.FIREBASE_SERVICE_ACCOUNT_JSON_STRING }}' | jq '.' > gcp_credentials.json
+        working-directory: functions
+
+      - name: Create file - .env
+        run: |
+          echo "TEST_ENV=${{ vars.TEST_ENV }}" > .env
+          echo "GCP_PROJECT_NUMBER=${{ vars.GCP_PROJECT_NUMBER }}" >> .env
+        working-directory: functions
+
+      - name: Deploy Firebase Functions
+        run: |
+          npm run deploy
+        working-directory: functions
