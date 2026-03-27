@@ -1,7 +1,7 @@
 import { Request } from 'express';
 
 export type FirebaseJwtToken = {
-  iss: string; // 'https://securetoken.google.com/fire-base-project-id-01';
+  iss: string; // 'https://securetoken.google.com/pinecone-ai-starter';
   aud: string; // 'rpoejct_id';
   auth_time: number;
   user_id?: string; // 'uid';

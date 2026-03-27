@@ -20,4 +20,4 @@ jobs:
         with:
           repoToken: ${{ secrets.GITHUB_TOKEN }}
           firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_JSON_STRING }}
-          projectId: fire-base-project-id-01
+          projectId: pinecone-ai-starter

@@ -3,7 +3,7 @@
 ## Authenticate service account in local dev
 
 ```bash
-gcloud config set project fire-base-project-id-01
+gcloud config set project pinecone-ai-starter
 
 export GOOGLE_APPLICATION_CREDENTIALS=/...
 

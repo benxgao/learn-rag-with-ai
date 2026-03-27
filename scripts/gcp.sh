@@ -1,6 +1,3 @@
-PROJECT_ID="fire-base-project-id-01"
-SERVICE_ACCOUNT_EMAIL="firebase-adminsdk-fbsvc@${PROJECT_ID}.iam.gserviceaccount.com"
-
 # firebase functions:artifacts:setpolicy
 
 # gcloud auth activate-service-account --key-file=/User/
@@ -17,9 +14,14 @@ gcloud services enable artifactregistry.googleapis.com \
     cloudbuild.googleapis.com \
     cloudfunctions.googleapis.com \
     eventarc.googleapis.com \
-    cloudbilling.googleapis.com
+    cloudbilling.googleapis.com \
+    compute.googleapis.com
 
 # Enable github-actions deployment by running these commands in GCP console
+
+PROJECT_ID="pinecone-ai-starter"
+SERVICE_ACCOUNT_EMAIL="firebase-adminsdk-fbsvc@${PROJECT_ID}.iam.gserviceaccount.com"
+
 gcloud projects add-iam-policy-binding $PROJECT_ID \
   --member=serviceAccount:$SERVICE_ACCOUNT_EMAIL \
   --role=roles/serviceusage.serviceUsageConsumer \
@@ -47,4 +49,4 @@ gcloud projects add-iam-policy-binding $PROJECT_ID \
 gcloud projects add-iam-policy-binding $PROJECT_ID \
   --member=serviceAccount:$SERVICE_ACCOUNT_EMAIL \
   --role=roles/logging.admin
-#
+
