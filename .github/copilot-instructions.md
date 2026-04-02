@@ -16,7 +16,6 @@
 - **Language**: TypeScript (Strict). `rootDir: "./src"`, `outDir: "./lib"`.
 - **Infrastructure**: Firebase Functions, Firestore (Flat collections), GCP Secret Manager.
 - **RAG Pipeline**: Input → Embed (OpenAI) → Vector Storage (Pinecone) → Top-k Retrieval → LLM.
-- **Auth**: Middleware `verifyFirebaseToken` for all `/api` routes.
 - **Logic**: `src/services` (Business), `src/adapters` (APIs), `src/endpoints` (Routes).
 
 ### Rules
