@@ -1,5 +1,6 @@
 import { getOpenAIClient } from '../services/openai';
 import logger from '../services/firebase/logger';
+import { EmbeddingError } from '../types/errors';
 
 /** Description: OpenAI embedding adapter | Sample: IN "hello world" -> OUT [0.1, 0.2, ...] */
 export class OpenAIAdapter {
@@ -37,7 +38,7 @@ export class OpenAIAdapter {
       return embedding;
     } catch (error) {
       logger.error(`Error in EmbeddingService.createEmbedding: ${error}`);
-      throw new Error(`Failed to create embedding: ${(error as any).message}`);
+      throw new EmbeddingError(`Failed to create embedding: ${(error as any).message}`, error);
     }
   }
 
