@@ -1,8 +1,6 @@
 import { Pinecone, Index } from '@pinecone-database/pinecone';
 import logger from '../services/firebase/logger';
-
-const PINECONE_API_KEY = process.env.PINECONE_API_KEY;
-const PINECONE_INDEX_NAME = process.env.PINECONE_INDEX_NAME;
+import { appConfig } from '../config';
 
 let pineconeClient: Pinecone | null = null;
 let indexClient: Index | null = null;
@@ -10,16 +8,17 @@ let indexClient: Index | null = null;
 /** Description: Initialize Pinecone client and get index instance */
 export async function getIndex(): Promise<Index> {
   try {
-    if (!PINECONE_API_KEY || !PINECONE_INDEX_NAME) {
+    const { apiKey, indexName } = appConfig.pinecone;
+    if (!apiKey || !indexName) {
       throw new Error('Missing required Pinecone environment variables: PINECONE_API_KEY or PINECONE_INDEX_NAME');
     }
 
     if (!pineconeClient) {
-      pineconeClient = new Pinecone({ apiKey: PINECONE_API_KEY! });
+      pineconeClient = new Pinecone({ apiKey });
     }
 
     if (!indexClient) {
-      indexClient = pineconeClient.index(PINECONE_INDEX_NAME!);
+      indexClient = pineconeClient.index(indexName);
 
       try {
         /**
@@ -39,7 +38,7 @@ export async function getIndex(): Promise<Index> {
         const stats = await indexClient.describeIndexStats();
 
         logger.info('Pinecone index connected', {
-          indexName: PINECONE_INDEX_NAME,
+          indexName,
           dimensions: stats.dimension,
           totalVectorCount: stats.totalRecordCount,
           namespaces: Object.keys(stats.namespaces || {})

@@ -7,7 +7,7 @@
 
 ## Core Principles
 1. **Minimal Working First**: Simplest version, no over-engineering.
-2. **Task-Driven**: Work only per `/docs/ai_tasks`.
+2. **Task-Driven**: Work only per `/docs/ai_tasks` (choose `basic/` for fundamentals or `advanced/` for production patterns).
 3. **Delta Only**: Update `/ai_tutorials` with new knowledge only; no full rewrites.
 4. **Code over Theory**: Concise explanations; prioritize runnable TS.
 
@@ -37,16 +37,15 @@ After EVERY task, update `/ai_tutorials/XX-subject.md`:
 ## Output Format (Strict Order)
 ### 1. Code
 - Complete, runnable, minimal comments.
-### 2. Short Explanation
-- Max 8 lines. Decisions only.
-### 3. Tutorial Update (Delta Only)
-- Example: `File: ai_tutorials/01-embeddings.md` -> `Added to How: ...`
+### 2. Short Explanation and Chat summary
+- Max 10 lines. Decisions only.
 
 ## Anti-Patterns
 - NO long essays or generic AI theory.
 - NO duplicating existing tutorial content.
 - NO refactoring unrelated code.
 - NO deep-nested Firestore structures.
+- NO long sentences/paragraph for human-read documents
 
 ## Decision Heuristic
 Unsure? **Simpler > Correct | Explicit > Abstract | Working > Perfect.**

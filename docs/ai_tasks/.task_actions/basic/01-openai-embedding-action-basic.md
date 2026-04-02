@@ -1,6 +1,6 @@
 ---
 description: Action Steps of Task 01
-reference: [Task 01](../ai_tasks/01-openai-embedding.md)
+reference: [Task 01](../../basic/01-openai-embedding-basic.md)
 ---
 
 **Phase 1: Install Dependencies & Setup (5 min)**
@@ -32,3 +32,4 @@ reference: [Task 01](../ai_tasks/01-openai-embedding.md)
 - [x] Test the endpoint with sample text
 - [x] Verify embedding vector length
 - [x] Update tutorial documentation
+

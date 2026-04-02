@@ -1,8 +1,5 @@
 import { Router as createRouter } from 'express';
-import { verifyFirebaseToken } from '../../middlewares/firebase-auth';
 import {embedHandler} from './embed';
-
-import protectedResources from './protected-resources';
 
 const router = createRouter();
 
@@ -17,8 +14,6 @@ const router = createRouter();
  */
 router.post('/embed', embedHandler);
 
-// Not related
-router.post('/protected-resources', verifyFirebaseToken, protectedResources);
 
 export default router;
 
