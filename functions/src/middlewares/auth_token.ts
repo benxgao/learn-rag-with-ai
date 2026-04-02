@@ -1,4 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
+import { appConfig } from '../config';
 
 /**
  * Middleware: auth_token
@@ -8,7 +9,7 @@ import { Request, Response, NextFunction } from 'express';
  */
 export const authToken = (req: Request, res: Response, next: NextFunction): void => {
   const token = req.headers['auth_token'];
-  const expected = process.env.TEST_ENV;
+  const expected = appConfig.app.auth_token;
 
   if (!expected) {
     res.status(500).json({ error: 'TEST_ENV not configured' });

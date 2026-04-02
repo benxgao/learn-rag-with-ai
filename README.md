@@ -42,18 +42,41 @@ This isn't just another boilerplate — it's a **hands-on learning experience** 
 
 ---
 
+## Learning Paths
+
+We offer **two tracks** to match your experience level:
+
+### **Basic Track** — Perfect for Getting Started
+New to RAG? Start here for fundamentals and quick wins.
+- 8 core tasks (00-08)
+- Minimal setup complexity
+- Build working features incrementally
+- **Estimated time**: 5-6 hours
+
+### **Advanced Track** — Ready for Production
+Want enterprise patterns and optimization? Go advanced.
+- 8 comprehensive tasks (00-08)
+- Production-grade implementation
+- Performance optimization
+- Real-world patterns and gotchas
+- **Estimated time**: 10-12 hours
+
+**Choose Your Path:** Both start in `/docs/ai_tasks/` — pick `basic/` or `advanced/` based on your experience!
+
+---
+
 ## Your Learning Journey
 
-| Phase | What You'll Build | Key Skill | Time |
-|-------|------------------|-----------|------|
-| **1** | Text Embedding API | Generate vectors with OpenAI | 30min |
-| **2** | Vector DB Setup | Connect to Pinecone | 20min |
-| **3** | Vector Storage | Store embeddings efficiently | 25min |
-| **4** | Semantic Search | Find similar content | 30min |
-| **5** | RAG Pipeline | Complete AI responses | 45min |
-| **6** | Smart Chunking | Optimize text splitting | 35min |
-| **7** | Quality Evaluation | Measure retrieval accuracy | 40min |
-| **8** | Enhanced Search | Improve with reranking | 50min |
+| Phase | Basic Task | Advanced Task | Key Skill | Time |
+|-------|-----------|---------------|-----------|------|
+| **1** | Setup (5min) | Advanced Setup | Env & Tools | 30min |
+| **2** | OpenAI Embed | Embed Optimization | Vector Generation | 30min |
+| **3** | Pinecone Index | Index Configuration | Vector DB | 20min |
+| **4** | Upsert Data | Batch Operations | Data Loading | 25min |
+| **5** | Similarity Search | Advanced Search | Semantic Match | 30min |
+| **6** | RAG Pipeline | Production RAG | Integration | 45min |
+| **7** | Chunking | Smart Chunking | Optimization | 35min |
+| **8** | Evaluation | Comprehensive Eval | Measurement | 40min |
 
 ---
 

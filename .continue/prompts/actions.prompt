@@ -1,7 +1,7 @@
 # Architecture Context Loading Rules
 
 ## Primary Rule
-Before starting ANY tasks related to `/docs/task_actions`, you MUST load all files from both `/docs/architecture/` and `/docs/ai_tasks` to understand:
+Before starting ANY tasks related to `/docs/ai_tasks/.task_actions`, you MUST load all files from both `/docs/architecture/` to understand:
 - Project and task purpose and goals
 - Current architecture state
 - Technical decisions and constraints

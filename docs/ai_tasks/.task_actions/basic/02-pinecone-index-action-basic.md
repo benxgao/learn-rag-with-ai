@@ -1,6 +1,6 @@
 ---
 description: Action Steps of Task 02
-reference: [Task 02](../ai_tasks/02-pinecone-index.md)
+reference: [Task 02](../../basic/02-pinecone-index-basic.md)
 ---
 
 **Phase 1: Install Dependencies & Setup (2 min)**

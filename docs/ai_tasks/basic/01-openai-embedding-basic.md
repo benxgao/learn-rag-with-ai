@@ -38,13 +38,4 @@ Functions:
 
 ---
 
-## Tutorial Trigger
-
-- embeddings.md
-
-Focus:
-
-- What = embedding
-- How = OpenAI API usage
-
-------
+## Tutorial Trigger\n\n- embeddings.md\n\nFocus:\n\n- What = embedding\n- How = OpenAI API usage

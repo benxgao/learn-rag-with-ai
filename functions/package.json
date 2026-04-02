@@ -32,6 +32,7 @@
   "devDependencies": {
     "@eslint/js": "^10.0.1",
     "@types/compression": "^1.7.5",
+    "@types/node": "^25.5.0",
     "eslint": "^10.1.0",
     "firebase-functions-test": "^3.1.0",
     "firebase-tools": "^15.12.0",

@@ -1,12 +1,13 @@
 import * as admin from 'firebase-admin';
 import { getAuth } from 'firebase-admin/auth';
+import { appConfig } from '../../config';
 
 /**
  * In local, service account is loaded via $GOOGLE_APPLICATION_CREDENTIALS
  * Once deployed, Workload Identity Federation is used to authenticate, and cert is not needed.
  */
 if (!admin.apps.length) {
-  admin.initializeApp({});
+  admin.initializeApp(appConfig.firebase ? { projectId: appConfig.firebase.projectId } : {});
 }
 
 export const firebaseAdmin = admin;

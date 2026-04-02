@@ -1,4 +1,5 @@
 import OpenAI from 'openai';
+import { appConfig } from '../../config';
 
 /**
  * Creates and returns a singleton OpenAI client instance
@@ -9,7 +10,7 @@ let openaiInstance: OpenAI | null = null;
 export function getOpenAIClient(): OpenAI {
   if (!openaiInstance) {
     openaiInstance = new OpenAI({
-      apiKey: process.env.OPENAI_API_KEY,
+      apiKey: appConfig.openai.apiKey,
     });
   }
   return openaiInstance;
