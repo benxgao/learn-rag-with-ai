@@ -3,6 +3,7 @@ import logger from '../services/firebase/logger';
 
 /** Description: Embedding service for text vectorization | Sample: IN "hello world" -> OUT [0.1, 0.2, ...] */
 export class EmbeddingService {
+
   /** Creates embedding vector from text input with validation and error handling */
   async createEmbedding(text: string): Promise<number[]> {
     try {
@@ -17,8 +18,8 @@ export class EmbeddingService {
       }
 
       // Rate limit protection: enforce max length
-      if (trimmedText.length > 8000) {
-        throw new Error('Text too long (max 8000 characters)');
+      if (trimmedText.length > 100000) {
+        throw new Error(`Text too long (max 100,000 characters). Got ${trimmedText.length}`);
       }
 
       logger.info('Creating embedding', {
@@ -31,7 +32,8 @@ export class EmbeddingService {
 
       logger.info('Embedding created successfully', {
         dimensions: embedding.length,
-        textLength: trimmedText.length
+        textLength: trimmedText.length,
+        estimatedCost: openAIAdapter.estimateCost(trimmedText)
       });
 
       return embedding;
@@ -44,6 +46,56 @@ export class EmbeddingService {
   /** Get embedding model information */
   getModelInfo(): { model: string; dimensions: number } {
     return openAIAdapter.getModelInfo();
+  }
+
+  /** Create embedding with detailed metrics (tokens, cost, duration) */
+  async createEmbeddingWithMetrics(
+    text: string
+  ): Promise<{
+    embedding: number[];
+    tokens: number;
+    cost: number;
+    duration: number;
+  }> {
+    const startTime = Date.now();
+    const tokens = openAIAdapter.estimateTokens(text);
+    const cost = openAIAdapter.estimateCost(text);
+
+    logger.info('📝 Embedding text with metrics', {
+      textPreview: text.substring(0, 50),
+      tokens,
+      estimatedCost: cost
+    });
+
+    const embedding = await this.createEmbedding(text);
+    const duration = Date.now() - startTime;
+
+    logger.info('✓ Embedding created with metrics', { duration, tokens, cost });
+
+    return { embedding, tokens, cost, duration };
+  }
+
+  /** Batch create embeddings (processes sequentially with rate limiting) */
+  async createEmbeddingsBatch(
+    texts: string[],
+    delayMs: number = 100
+  ): Promise<number[][]> {
+    const embeddings: number[][] = [];
+
+    logger.info('Starting batch embedding', { count: texts.length, delayMs });
+
+    for (let i = 0; i < texts.length; i++) {
+      const text = texts[i];
+      embeddings.push(await this.createEmbedding(text));
+
+      // Rate limiting: space out requests
+      if (i < texts.length - 1) {
+        await new Promise(resolve => setTimeout(resolve, delayMs));
+      }
+    }
+
+    logger.info('Batch embedding completed', { count: embeddings.length });
+    return embeddings;
   }
 }
 
