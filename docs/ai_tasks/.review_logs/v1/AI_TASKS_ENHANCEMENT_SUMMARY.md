@@ -33,7 +33,7 @@ Created a detailed 400+ line review document covering:
 
 Created two fully-enhanced sample tasks demonstrating the improvement pattern:
 
-#### Task 04 — Query Similarity [ENHANCED]
+#### Task 04 — Query Similarity [advanced]
 **Original:** 11 lines  
 **Enhanced:** 400+ lines
 
@@ -54,7 +54,7 @@ Created two fully-enhanced sample tasks demonstrating the improvement pattern:
 - When to adjust topK
 - Filtering and diversity strategies
 
-#### Task 07 — Eval Retrieval [ENHANCED]
+#### Task 07 — Eval Retrieval [advanced]
 **Original:** 9 lines  
 **Enhanced:** 550+ lines
 

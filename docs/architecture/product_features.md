@@ -2,35 +2,36 @@
 
 ## Current Capabilities
 
-### 1. Intelligent Document Processing
-- **Text Chunking & Embedding**: Automatically split documents into optimal chunks and generate high-quality embeddings using OpenAI
-- **Vector Storage**: Store embeddings in Pinecone for fast, scalable similarity search
-- **Multi-format Support**: Process plain text, PDF, and structured documents
+### 1. Semantic Embeddings
+- **OpenAI Integration**: Generate high-quality embeddings using `text-embedding-3-small` model (1536 dimensions)
+- **Efficient API**: RESTful `/api/embed` endpoint with input validation (max 100K characters)
+- **Cost Estimation**: Built-in cost tracking for API usage monitoring
+- **Error Handling**: Comprehensive validation for empty inputs, dimension mismatches, and API failures
 
-### 2. Semantic Search & Retrieval
-- **Natural Language Queries**: Search using plain English instead of keywords
-- **Context-Aware Results**: Retrieve most relevant document chunks based on semantic similarity
-- **Top-K Precision**: Configurable result limits (1-100) with relevance scoring
-- **Sub-second Response**: Millisecond-level vector search performance
+### 2. Vector Search & Retrieval
+- **Pinecone Integration**: Store and retrieve embeddings in Pinecone with automatic index initialization
+- **Natural Language Queries**: Find semantically similar content without keyword matching
+- **Scalable Architecture**: Handle large datasets with approximate nearest neighbor search
+- **Connectivity Validation**: Healthcheck endpoint ensures Pinecone connectivity and environment configuration
 
-### 3. RAG-Powered Q&A
-- **Accurate Answers**: Generate responses grounded in your document knowledge base
-- **Source Attribution**: Every answer includes referenced document chunks
-- **Confidence Scoring**: Reliability metrics for each response
-- **Multi-turn Conversations**: Maintain context across question sequences
+### 3. Retrieval-Augmented Generation (RAG)
+- **Context-Aware Generation**: Combine vector search with LLM generation for accurate, grounded answers
+- **Knowledge Injection**: Reference private or domain-specific documents in LLM responses
+- **Reduced Hallucination**: Ground responses in actual retrieved content
+- **Multi-step Pipeline**: Orchestrate retrieval → ranking → generation workflows
 
-### 4. Enterprise-Ready API
-- **RESTful Design**: Clean, intuitive API endpoints
-- **TypeScript Implementation**: Type-safe, well-documented code
-- **Error Handling**: Comprehensive validation and meaningful error messages
-- **Rate Limiting**: Built-in protection against API abuse
-- **Scalable Architecture**: Handle thousands of documents and queries
+### 4. Production-Ready API
+- **RESTful Design**: Clean, intuitive endpoints with comprehensive request/response samples
+- **TypeScript Implementation**: Full type-safe codebase with detailed error types
+- **Environment Configuration**: Secure credential management via GCP Secret Manager
+- **Firebase Integration**: Built-in logging, authentication, and RTDB support
+- **Rate Limiting & Validation**: Protect against abuse and invalid inputs
 
 ### 5. Developer Experience
-- **Quick Setup**: Get running in under 10 minutes
-- **Clear Documentation**: Step-by-step tutorials for every feature
-- **Local Development**: Full TypeScript source code included
-- **Testing Suite**: Comprehensive evaluation framework included
+- **Step-by-Step Tutorials**: Basic and advanced guides for embeddings, vector search, RAG, and evaluation
+- **Local Development**: Complete TypeScript source code with clear module organization
+- **Comprehensive Documentation**: Architecture guides, AI fundamentals, and trade-off analysis
+- **Testing & Evaluation**: Framework for chunking strategies and retrieval quality assessment
 
 ## Future Roadmap
 

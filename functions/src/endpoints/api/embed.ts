@@ -2,8 +2,16 @@ import { Request, Response } from 'express';
 import logger from '../../services/firebase/logger';
 import { embeddingService } from '../../services/embedding';
 
-/** Sample: REQ {text: string} | RES {success: boolean, embedding: number[], dimensions: 1536, estimatedCost: number} */
+/**
+ * Create semantic vector embedding from text
+ *
+ * Sample:
+ * REQ {text: string}
+ * RES {embedding: number[], dimensions: 1536, tokenCount: number, estimatedCost: number, model: string, duration: number}
+ */
 export const embedHandler = async (req: Request, res: Response): Promise<void> => {
+  const startTime = Date.now();
+
   try {
     const { text } = req.body;
 
@@ -37,14 +45,19 @@ export const embedHandler = async (req: Request, res: Response): Promise<void> =
     // Create embedding
     const embedding = await embeddingService.createEmbedding(text);
     const modelInfo = embeddingService.getModelInfo();
+    const duration = Date.now() - startTime;
+
+    // Estimate token count and cost
+    const tokenCount = Math.ceil(text.length / 4); // Rough: 1 token ≈ 4 characters
+    const estimatedCost = (tokenCount / 1_000_000) * 0.02; // $0.02 per 1M tokens
 
     res.json({
-      success: true,
-      text: text.substring(0, 100), // Echo back (truncated)
       embedding,
       dimensions: embedding.length,
+      tokenCount,
+      estimatedCost,
       model: modelInfo.model,
-      estimatedCost: (embedding.length / 4 / 1_000_000) * 0.02, // Rough estimate
+      duration,
     });
 
   } catch (error) {

@@ -1,4 +1,8 @@
-# Task 00 — Project Setup [ENHANCED]
+---
+notes: Read `../_meta_.md` as instruction before take task actions
+---
+
+# Task 00 — Project Setup [advanced]
 
 ## Goal
 
@@ -9,6 +13,7 @@ Set up the complete development environment for the Pinecone AI RAG project, und
 ## Learning Outcomes
 
 After completing this task, you'll understand:
+
 - **Project architecture** — How functions, configs, and dependencies fit together
 - **Environment configuration** — API keys, secrets management, .env files
 - **Dependency management** — What each package does and why it's needed
@@ -23,18 +28,21 @@ After completing this task, you'll understand:
 ## Requirements
 
 **Prerequisites:**
+
 - Node.js 22+ installed
 - npm or yarn package manager
 - Git for version control
 - Text editor/IDE (VS Code recommended)
 
 **Accounts needed:**
+
 - Pinecone account (free tier available)
 - OpenAI account with API credits
 - Firebase project with admin access
 - GCP project (same as Firebase for secret management)
 
 **Environment variables:**
+
 - `OPENAI_API_KEY` — From OpenAI dashboard
 - `PINECONE_API_KEY` — From Pinecone project
 - `FIREBASE_PROJECT_ID` — From Firebase console
@@ -76,6 +84,7 @@ Result: Clear success/failure messages, easy diagnosis
 ## Implementation
 
 **Files to create/verify:**
+
 ```
 root/
 ├── .env (LOCAL - do not commit)
@@ -86,6 +95,7 @@ root/
 ```
 
 **Verification checklist:**
+
 ```
 1. Dependencies installed
 2. Environment variables set
@@ -118,6 +128,7 @@ npm --version   # Should be 8+
 ```
 
 **Expected output:**
+
 ```
 npm notice created a lockfile as package-lock.json
 added 156 packages, and audited 157 packages
@@ -167,58 +178,61 @@ echo ".env" >> .gitignore
 
 ```typescript
 // Create validation script: validate-setup.ts
-import { getOpenAIClient } from './src/adapters/openai';
-import { getPineconeClient } from './src/adapters/pinecone';
+import { getOpenAIClient } from "./src/adapters/openai";
+import { getPineconeClient } from "./src/adapters/pinecone";
 
 async function validateSetup() {
-  console.log('🔍 Validating setup...\n');
-  
+  console.log("🔍 Validating setup...\n");
+
   // Check OpenAI
-  console.log('1️⃣  OpenAI Configuration');
+  console.log("1️⃣  OpenAI Configuration");
   try {
     const openai = getOpenAIClient();
-    console.log('   ✅ OpenAI client initialized');
-    console.log('   ✅ API key format valid (starts with sk-)');
+    console.log("   ✅ OpenAI client initialized");
+    console.log("   ✅ API key format valid (starts with sk-)");
   } catch (error) {
-    console.error('   ❌ OpenAI error:', error);
+    console.error("   ❌ OpenAI error:", error);
     process.exit(1);
   }
-  
+
   // Check Pinecone
-  console.log('\n2️⃣  Pinecone Configuration');
+  console.log("\n2️⃣  Pinecone Configuration");
   try {
     const pinecone = getPineconeClient();
-    console.log('   ✅ Pinecone client initialized');
-    
+    console.log("   ✅ Pinecone client initialized");
+
     // Try listing indexes
     const indexes = await pinecone.listIndexes();
-    console.log(`   ✅ Connected to Pinecone (${indexes.length} indexes found)`);
+    console.log(
+      `   ✅ Connected to Pinecone (${indexes.length} indexes found)`,
+    );
   } catch (error) {
-    console.error('   ❌ Pinecone error:', error);
+    console.error("   ❌ Pinecone error:", error);
     process.exit(1);
   }
-  
+
   // Check Firebase (if configured)
   if (process.env.FIREBASE_PROJECT_ID) {
-    console.log('\n3️⃣  Firebase Configuration');
+    console.log("\n3️⃣  Firebase Configuration");
     try {
       // Your Firebase validation
-      console.log('   ✅ Firebase credentials loaded');
+      console.log("   ✅ Firebase credentials loaded");
     } catch (error) {
-      console.error('   ❌ Firebase error:', error);
+      console.error("   ❌ Firebase error:", error);
     }
   }
-  
-  console.log('\n✅ All systems operational!');
+
+  console.log("\n✅ All systems operational!");
 }
 
-validateSetup().catch(error => {
-  console.error('Setup validation failed:', error);
+validateSetup().catch((error) => {
+  console.error("Setup validation failed:", error);
   process.exit(1);
 });
 ```
 
 **Run validation:**
+
 ```bash
 npx ts-node validate-setup.ts
 ```
@@ -520,30 +534,25 @@ function getRequiredEnv(name: string): string {
   if (!value) {
     throw new Error(
       `${name} environment variable not set. ` +
-      `Add to .env file and restart dev server.`
+        `Add to .env file and restart dev server.`,
     );
   }
   return value;
 }
 
-const apiKey = getRequiredEnv('OPENAI_API_KEY');
+const apiKey = getRequiredEnv("OPENAI_API_KEY");
 ```
 
 ### Pattern 2: Validating Setup
 
 ```typescript
 async function validateEnvironment() {
-  const required = [
-    'OPENAI_API_KEY',
-    'PINECONE_API_KEY',
-  ];
-  
-  const missing = required.filter(key => !process.env[key]);
-  
+  const required = ["OPENAI_API_KEY", "PINECONE_API_KEY"];
+
+  const missing = required.filter((key) => !process.env[key]);
+
   if (missing.length > 0) {
-    throw new Error(
-      `Missing required variables: ${missing.join(', ')}`
-    );
+    throw new Error(`Missing required variables: ${missing.join(", ")}`);
   }
 }
 ```
@@ -559,9 +568,11 @@ const config = {
   pinecone: {
     apiKey: process.env.PINECONE_API_KEY,
   },
-  firebase: process.env.FIREBASE_PROJECT_ID ? {
-    projectId: process.env.FIREBASE_PROJECT_ID,
-  } : null,
+  firebase: process.env.FIREBASE_PROJECT_ID
+    ? {
+        projectId: process.env.FIREBASE_PROJECT_ID,
+      }
+    : null,
 };
 ```
 
@@ -601,6 +612,7 @@ pkill -f "npm run dev"
 ```
 
 **Success criteria:**
+
 - ✅ No errors during npm install
 - ✅ All required env vars present
 - ✅ Health endpoint returns 200 OK
@@ -612,6 +624,7 @@ pkill -f "npm run dev"
 ## Security Best Practices
 
 ### ✅ DO:
+
 - Store API keys in .env file (local only)
 - Add .env to .gitignore
 - Use separate keys for dev/prod
@@ -619,6 +632,7 @@ pkill -f "npm run dev"
 - Monitor API usage
 
 ### ❌ DON'T:
+
 - Commit .env to git
 - Share API keys in Slack/email
 - Log API keys to console
@@ -653,6 +667,7 @@ After setup verification:
 - **system_architecture.md** → Fill "Setup" section with environment validation
 
 Tutorial focus:
+
 - What = Complete project setup with all components
 - Why = Proper configuration prevents hours of debugging
 - How = Step-by-step verification of each component

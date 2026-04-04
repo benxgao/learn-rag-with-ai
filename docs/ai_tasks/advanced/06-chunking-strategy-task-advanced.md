@@ -1,4 +1,8 @@
-# Task 06 — Chunking Strategy [ENHANCED]
+---
+notes: Read `../_meta_.md` as instruction before take task actions
+---
+
+# Task 06 — Chunking Strategy [advanced]
 
 ## Goal
 
@@ -9,6 +13,7 @@ Master document chunking strategies to optimize retrieval quality and cost, unde
 ## Learning Outcomes
 
 After completing this task, you'll understand:
+
 - **Chunking fundamentals** — Why and how to split documents intelligently
 - **Strategy trade-offs** — Fixed size vs sliding window vs semantic chunking
 - **Quality impact** — How chunks affect retrieval and answer quality
@@ -23,17 +28,20 @@ After completing this task, you'll understand:
 ## Requirements
 
 **Input:**
+
 - Documents (text, papers, documentation)
 - Document types (short, medium, long-form)
 - Quality metrics (what makes a "good" retrieval?)
 
 **Output:**
+
 - Chunks with optimal size, overlap, metadata
 - Strategy recommendation for your use case
 - Quality metrics showing strategy comparison
 - Cost analysis per strategy
 
 **Key parameters:**
+
 - Chunk size (default: 512 tokens)
 - Overlap (default: 100 tokens)
 - Strategy (fixed, sliding, semantic)
@@ -107,36 +115,39 @@ Cons: ❌ No context at boundaries, misses structure
 ```
 
 **Implementation:**
+
 ```typescript
 function fixedSizeChunks(
   text: string,
-  chunkSize: number = 512 // tokens, ~2000 characters
+  chunkSize: number = 512, // tokens, ~2000 characters
 ): string[] {
   const chunks: string[] = [];
-  let currentChunk = '';
+  let currentChunk = "";
   const words = text.split(/\s+/);
-  
+
   for (const word of words) {
-    if ((currentChunk + ' ' + word).length > chunkSize * 4) {
+    if ((currentChunk + " " + word).length > chunkSize * 4) {
       // Approximate: 4 characters per token
       chunks.push(currentChunk.trim());
       currentChunk = word;
     } else {
-      currentChunk += ' ' + word;
+      currentChunk += " " + word;
     }
   }
-  
+
   if (currentChunk.trim()) {
     chunks.push(currentChunk.trim());
   }
-  
+
   return chunks;
 }
 
 // Usage
 const chunks = fixedSizeChunks(document, 512);
 console.log(`Created ${chunks.length} chunks`);
-console.log(`Avg chunk size: ${chunks.reduce((a, c) => a + c.length, 0) / chunks.length} chars`);
+console.log(
+  `Avg chunk size: ${chunks.reduce((a, c) => a + c.length, 0) / chunks.length} chars`,
+);
 ```
 
 **Best for:** Homogeneous documents, structured data, initial testing
@@ -166,33 +177,36 @@ Cons: ❌ More chunks = higher cost
 ```
 
 **Implementation:**
+
 ```typescript
 function slidingWindowChunks(
   text: string,
   chunkSize: number = 512, // tokens
-  overlap: number = 100     // tokens (20% overlap)
+  overlap: number = 100, // tokens (20% overlap)
 ): string[] {
   const chunks: string[] = [];
   const words = text.split(/\s+/);
-  
+
   let start = 0;
   const step = chunkSize - overlap;
-  
+
   while (start < words.length) {
     const end = Math.min(start + chunkSize, words.length);
-    chunks.push(words.slice(start, end).join(' '));
-    
+    chunks.push(words.slice(start, end).join(" "));
+
     if (end === words.length) break;
     start += step;
   }
-  
+
   return chunks;
 }
 
 // Usage
 const chunks = slidingWindowChunks(document, 512, 100);
 console.log(`Created ${chunks.length} chunks with 100-token overlap`);
-console.log(`Cost multiplier: ${(chunks.length / fixedSizeChunks(document).length).toFixed(2)}x`);
+console.log(
+  `Cost multiplier: ${(chunks.length / fixedSizeChunks(document).length).toFixed(2)}x`,
+);
 ```
 
 **Best for:** Text documents, papers, continuous prose
@@ -228,26 +242,27 @@ Cons: ❌ Complex, variable size, needs topic detection
 ```
 
 **Implementation (simple variant using headers):**
+
 ```typescript
 function semanticChunksByHeaders(text: string): string[] {
-  const lines = text.split('\n');
+  const lines = text.split("\n");
   const chunks: string[] = [];
-  let currentChunk = '';
-  
+  let currentChunk = "";
+
   for (const line of lines) {
     // Detect markdown headers or topic breaks
     if (line.match(/^#+\s/) && currentChunk.trim()) {
       chunks.push(currentChunk.trim());
       currentChunk = line;
     } else {
-      currentChunk += '\n' + line;
+      currentChunk += "\n" + line;
     }
   }
-  
+
   if (currentChunk.trim()) {
     chunks.push(currentChunk.trim());
   }
-  
+
   return chunks;
 }
 
@@ -264,14 +279,14 @@ console.log(`Created ${chunks.length} semantic chunks`);
 
 ### Metrics Table
 
-| Metric | Fixed Size | Sliding Window | Semantic |
-|--------|-----------|-----------------|----------|
-| Simplicity | ⭐⭐⭐⭐⭐ | ⭐⭐⭐ | ⭐⭐ |
-| Speed | ⭐⭐⭐⭐⭐ | ⭐⭐⭐⭐ | ⭐⭐⭐ |
-| Context Preservation | ⭐ | ⭐⭐⭐⭐⭐ | ⭐⭐⭐⭐⭐ |
-| Cost Efficiency | ⭐⭐⭐⭐⭐ | ⭐⭐⭐ | ⭐⭐⭐⭐ |
-| Retrieval Quality | ⭐⭐⭐ | ⭐⭐⭐⭐ | ⭐⭐⭐⭐⭐ |
-| Implementation | ⭐⭐⭐⭐⭐ | ⭐⭐⭐ | ⭐⭐ |
+| Metric               | Fixed Size | Sliding Window | Semantic   |
+| -------------------- | ---------- | -------------- | ---------- |
+| Simplicity           | ⭐⭐⭐⭐⭐ | ⭐⭐⭐         | ⭐⭐       |
+| Speed                | ⭐⭐⭐⭐⭐ | ⭐⭐⭐⭐       | ⭐⭐⭐     |
+| Context Preservation | ⭐         | ⭐⭐⭐⭐⭐     | ⭐⭐⭐⭐⭐ |
+| Cost Efficiency      | ⭐⭐⭐⭐⭐ | ⭐⭐⭐         | ⭐⭐⭐⭐   |
+| Retrieval Quality    | ⭐⭐⭐     | ⭐⭐⭐⭐       | ⭐⭐⭐⭐⭐ |
+| Implementation       | ⭐⭐⭐⭐⭐ | ⭐⭐⭐         | ⭐⭐       |
 
 ### Cost Comparison
 
@@ -334,50 +349,48 @@ export interface ChunkingStrategy {
 }
 
 export class FixedSizeStrategy implements ChunkingStrategy {
-  name = 'fixed-size';
-  
-  constructor(
-    public chunkSize: number = 512,
-  ) {}
-  
+  name = "fixed-size";
+
+  constructor(public chunkSize: number = 512) {}
+
   chunk(text: string): string[] {
     const words = text.split(/\s+/);
     const chunks: string[] = [];
-    let current = '';
-    
+    let current = "";
+
     for (const word of words) {
-      if ((current + ' ' + word).length > this.chunkSize * 4) {
+      if ((current + " " + word).length > this.chunkSize * 4) {
         chunks.push(current.trim());
         current = word;
       } else {
-        current += ' ' + word;
+        current += " " + word;
       }
     }
-    
+
     if (current.trim()) chunks.push(current.trim());
     return chunks;
   }
 }
 
 export class SlidingWindowStrategy implements ChunkingStrategy {
-  name = 'sliding-window';
-  
+  name = "sliding-window";
+
   constructor(
     public chunkSize: number = 512,
     public overlap: number = 100,
   ) {}
-  
+
   chunk(text: string): string[] {
     const words = text.split(/\s+/);
     const chunks: string[] = [];
     const step = this.chunkSize - this.overlap;
-    
+
     for (let i = 0; i < words.length; i += step) {
       const end = Math.min(i + this.chunkSize, words.length);
-      chunks.push(words.slice(i, end).join(' '));
+      chunks.push(words.slice(i, end).join(" "));
       if (end === words.length) break;
     }
-    
+
     return chunks;
   }
 }
@@ -412,14 +425,14 @@ export interface ChunkingMetrics {
 
 export function evaluateStrategy(
   strategy: ChunkingStrategy,
-  text: string
+  text: string,
 ): ChunkingMetrics {
   const chunks = strategy.chunk(text);
-  const sizes = chunks.map(c => c.length);
+  const sizes = chunks.map((c) => c.length);
   const totalSize = sizes.reduce((a, b) => a + b, 0);
   const avgTokens = totalSize / 4; // Rough: 4 chars per token
   const embeddingCost = chunks.length * 0.000002; // $0.02 per 1M tokens
-  
+
   return {
     strategyName: strategy.name,
     chunkCount: chunks.length,
@@ -432,7 +445,7 @@ export function evaluateStrategy(
 }
 
 // Usage
-const results = strategies.map(s => evaluateStrategy(s, document));
+const results = strategies.map((s) => evaluateStrategy(s, document));
 console.table(results);
 ```
 
@@ -470,18 +483,18 @@ strategies.forEach(s => {
 // Create large document
 const largeDoc = document.repeat(50); // ~50K tokens
 
-const metrics = strategies.map(s => evaluateStrategy(s, largeDoc));
+const metrics = strategies.map((s) => evaluateStrategy(s, largeDoc));
 
-console.log('\n📊 Cost Comparison:');
-metrics.forEach(m => {
+console.log("\n📊 Cost Comparison:");
+metrics.forEach((m) => {
   console.log(`${m.strategyName}:`);
   console.log(`  Chunks: ${m.chunkCount}`);
   console.log(`  Cost: $${m.embeddingCost.toFixed(6)}`);
 });
 
 // Find cheapest
-const cheapest = metrics.reduce((a, b) => 
-  a.embeddingCost < b.embeddingCost ? a : b
+const cheapest = metrics.reduce((a, b) =>
+  a.embeddingCost < b.embeddingCost ? a : b,
 );
 console.log(`\n💰 Cheapest: ${cheapest.strategyName}`);
 ```
@@ -491,20 +504,20 @@ console.log(`\n💰 Cheapest: ${cheapest.strategyName}`);
 ```typescript
 // Test with actual retrieval
 const testQuestions = [
-  'What is machine learning?',
-  'How do neural networks work?',
-  'Explain transformers',
+  "What is machine learning?",
+  "How do neural networks work?",
+  "Explain transformers",
 ];
 
 for (const strategy of strategies) {
   console.log(`\n📊 Testing ${strategy.name}:`);
-  
+
   const chunks = strategy.chunk(document);
-  
+
   for (const question of testQuestions) {
     const relevantChunks = findRelevant(chunks, question);
     const quality = evaluateRetrieval(question, relevantChunks);
-    
+
     console.log(`  Q: "${question}"`);
     console.log(`  Relevant chunks: ${relevantChunks.length}`);
     console.log(`  Quality score: ${quality.toFixed(2)}`);
@@ -521,10 +534,10 @@ for (const strategy of strategies) {
 ```typescript
 function adaptiveChunkSize(documentLength: number): number {
   // Longer documents need smaller chunks for precision
-  if (documentLength < 1000) return 256;      // Short: 256 tokens
-  if (documentLength < 5000) return 512;      // Medium: 512 tokens
-  if (documentLength < 20000) return 768;     // Long: 768 tokens
-  return 1024;                                // Very long: 1024 tokens
+  if (documentLength < 1000) return 256; // Short: 256 tokens
+  if (documentLength < 5000) return 512; // Medium: 512 tokens
+  if (documentLength < 20000) return 768; // Long: 768 tokens
+  return 1024; // Very long: 1024 tokens
 }
 
 // Usage
@@ -537,12 +550,12 @@ const chunks = fixedSizeChunks(document, optimalSize);
 ```typescript
 function optimalOverlap(domain: string): number {
   const overlapPercentages = {
-    'technical': 0.20,    // 20% overlap (good for coherence)
-    'legal': 0.30,        // 30% overlap (preserve exact language)
-    'fiction': 0.10,      // 10% overlap (natural breaks exist)
-    'default': 0.15,      // 15% overlap (balanced)
+    technical: 0.2, // 20% overlap (good for coherence)
+    legal: 0.3, // 30% overlap (preserve exact language)
+    fiction: 0.1, // 10% overlap (natural breaks exist)
+    default: 0.15, // 15% overlap (balanced)
   };
-  
+
   return overlapPercentages[domain] || overlapPercentages.default;
 }
 ```
@@ -562,12 +575,12 @@ interface Chunk {
 function chunkWithMetadata(
   text: string,
   documentId: string,
-  strategy: ChunkingStrategy
+  strategy: ChunkingStrategy,
 ): Chunk[] {
   const chunks = strategy.chunk(text);
   const result: Chunk[] = [];
   let position = 0;
-  
+
   chunks.forEach((chunkText, index) => {
     result.push({
       id: `${documentId}-chunk-${index}`,
@@ -579,7 +592,7 @@ function chunkWithMetadata(
     });
     position += chunkText.length + 1; // +1 for space
   });
-  
+
   return result;
 }
 ```
@@ -588,13 +601,13 @@ function chunkWithMetadata(
 
 ## Common Issues & Solutions
 
-| Issue | Cause | Solution |
-|-------|-------|----------|
-| "Chunks too small" | Small chunk size | Increase to 512+ tokens |
-| "Retrieval misses context" | No overlap | Add 10-20% overlap |
-| "Cost too high" | Many small chunks | Increase chunk size or use semantic |
-| "Chunks are incoherent" | Fixed size cuts mid-topic | Use semantic or sliding window |
-| "Some chunks very large" | Variable strategy | Enforce max size limit |
+| Issue                      | Cause                     | Solution                            |
+| -------------------------- | ------------------------- | ----------------------------------- |
+| "Chunks too small"         | Small chunk size          | Increase to 512+ tokens             |
+| "Retrieval misses context" | No overlap                | Add 10-20% overlap                  |
+| "Cost too high"            | Many small chunks         | Increase chunk size or use semantic |
+| "Chunks are incoherent"    | Fixed size cuts mid-topic | Use semantic or sliding window      |
+| "Some chunks very large"   | Variable strategy         | Enforce max size limit              |
 
 ---
 
@@ -633,6 +646,7 @@ function chunkWithMetadata(
 - **rag.md** → Add "Chunking Considerations" section
 
 Tutorial focus:
+
 - What = Chunking strategies and their trade-offs
 - Why = Chunk quality directly impacts retrieval and answer quality
 - How = Implement and evaluate different strategies

@@ -1,4 +1,8 @@
-# Task 01 — OpenAI Embedding [ENHANCED]
+---
+notes: Read `../_meta_.md` as instruction before take task actions
+---
+
+# Task 01 — OpenAI Embedding [advanced]
 
 ## Goal
 
@@ -9,6 +13,7 @@ Create a function that transforms text into semantic vector embeddings using Ope
 ## Learning Outcomes
 
 After completing this task, you'll understand:
+
 - **What embeddings are** — Numerical representations that capture semantic meaning
 - **Why embeddings enable semantic search** — Beyond simple keyword matching
 - **How to integrate OpenAI API from TypeScript** — Production-grade client patterns
@@ -22,15 +27,18 @@ After completing this task, you'll understand:
 ## Requirements
 
 **Input:**
+
 - `text`: string (natural language text, e.g., "What is machine learning?")
 
 **Output:**
+
 - `embedding`: number[] array
   - Type: 1536-dimensional vector
   - Format: normalized float values in range [-1, 1]
   - Properties: Captures semantic meaning of input text
 
 **Model Selection:**
+
 - Model: `text-embedding-3-small`
 - Dimensions: 1536
 - Cost: $0.02 per 1M tokens
@@ -73,11 +81,13 @@ Similarity B: 0.15 ❌ (different meaning, despite keyword match)
 **See:** [Action Steps](./.task_actions/advanced/01-openai-embedding-action-advanced.md)
 
 **Files to create:**
+
 - `src/adapters/openai.ts` — OpenAI client initialization (singleton pattern)
 - `src/services/embedding.ts` — Embedding business logic with cost tracking
 - `src/endpoints/api/embed.ts` — REST endpoint for embedding requests
 
 **Key functions:**
+
 - `getOpenAIClient(): OpenAI` — Singleton client
 - `createEmbedding(text: string): Promise<number[]>` — Create embeddings
 - `estimateTokens(text: string): number` — Token estimation
@@ -154,7 +164,7 @@ For comparison:
 
 Examples:
 - \"hello\" (5 chars) ≈ 2 tokens
-- \"machine learning\" (15 chars) ≈ 4 tokens  
+- \"machine learning\" (15 chars) ≈ 4 tokens
 - \"The quick brown fox...\" (50 chars) ≈ 13 tokens
 
 For accurate counts, use OpenAI's tokenizer
@@ -177,11 +187,13 @@ But 4x rule is good enough for estimation
 ## Next Steps
 
 **After this task:**
+
 1. Move to Task 02 to store embeddings in Pinecone
 2. Task 03 will combine embedding + storage
 3. Task 04 will use embeddings for search
 
 **To deepen understanding:**
+
 - Read OpenAI embedding docs: https://platform.openai.com/docs/guides/embeddings
 - Experiment with different texts and observe embedding similarity
 - Try text-embedding-3-large to see difference in quality
@@ -193,9 +205,9 @@ But 4x rule is good enough for estimation
 - **embeddings.md** → Fill \"How\" section with OpenAI integration patterns
 
 Tutorial focus:
+
 - What = Embeddings: numerical representations of semantic meaning
 - Why = Enables semantic search (beyond keyword matching)
 - How = OpenAI API integration with singleton client pattern
 - Gotchas = Rate limits, token costs, dimension validation, error handling
 - Trade-offs = Cost vs quality (small vs large models)
-

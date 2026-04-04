@@ -1,4 +1,8 @@
-# Task 04 — Query Similarity [ENHANCED]
+---
+notes: Read `../_meta_.md` as instruction before take task actions
+---
+
+# Task 04 — Query Similarity [advanced]
 
 ## Goal
 
@@ -9,6 +13,7 @@ Implement semantic search by retrieving the most similar documents from Pinecone
 ## Learning Outcomes
 
 After completing this task, you'll understand:
+
 - **How cosine similarity enables semantic matching** — Not keyword search, but meaning-based
 - **Retrieval pipeline mechanics** — Query embedding → vector search → ranking
 - **Similarity scoring interpretation** — 0.5 vs 0.9: what's the difference?
@@ -21,16 +26,19 @@ After completing this task, you'll understand:
 ## Requirements
 
 **Input:**
+
 - `query`: string (natural language question like "What is machine learning?")
 - `topK`: number (default: 3, how many results to return)
 
 **Process:**
+
 1. Embed query text using same model as documents (text-embedding-3-small)
 2. Call Pinecone `query()` with embedded vector
 3. Retrieve top-K vectors with highest similarity scores
 4. Transform results into readable format with scores
 
 **Output:**
+
 - Array of documents sorted by relevance
 - Similarity scores (0.0-1.0 range)
 - Include original text and metadata
@@ -43,18 +51,19 @@ After completing this task, you'll understand:
 **File:** `/src/services/retrieval.ts`
 
 **Core Interface:**
+
 ```typescript
 export interface RetrievalResult {
   id: string;
   text: string;
-  score: number;  // Similarity score: 0.0-1.0
+  score: number; // Similarity score: 0.0-1.0
   metadata?: Record<string, any>;
 }
 
 export async function querySimilar(
   query: string,
-  topK: number = 3
-): Promise<RetrievalResult[]>
+  topK: number = 3,
+): Promise<RetrievalResult[]>;
 ```
 
 ---
@@ -65,8 +74,8 @@ export async function querySimilar(
 
 ```typescript
 // src/services/retrieval.ts
-import { getIndex } from '../adapters/pinecone';
-import { createEmbedding } from './embedding';
+import { getIndex } from "../adapters/pinecone";
+import { createEmbedding } from "./embedding";
 
 export interface RetrievalResult {
   id: string;
@@ -77,7 +86,7 @@ export interface RetrievalResult {
 
 /**
  * Query similar documents from Pinecone
- * 
+ *
  * Process:
  * 1. Embed the query (create vector representation)
  * 2. Search Pinecone for nearest neighbors
@@ -85,11 +94,11 @@ export interface RetrievalResult {
  */
 export async function querySimilar(
   query: string,
-  topK: number = 3
+  topK: number = 3,
 ): Promise<RetrievalResult[]> {
   // Step 1: Create embedding for query
   const queryEmbedding = await createEmbedding(query);
-  
+
   // Step 2: Search Pinecone
   const index = getIndex();
   const searchResults = await index.query({
@@ -97,11 +106,11 @@ export async function querySimilar(
     topK,
     includeMetadata: true,
   });
-  
+
   // Step 3: Transform results
   return searchResults.matches.map((match) => ({
     id: match.id,
-    text: (match.metadata?.text as string) || '',
+    text: (match.metadata?.text as string) || "",
     score: match.score || 0,
     metadata: match.metadata,
   }));
@@ -116,12 +125,12 @@ export async function querySimilar(
  * Guide interpretation of numeric scores
  */
 export function getSimilarityLabel(score: number): string {
-  if (score >= 0.90) return '🟢 Perfect match';
-  if (score >= 0.80) return '🟢 Excellent match';
-  if (score >= 0.70) return '🟡 Good match';
-  if (score >= 0.60) return '🟡 Fair match';
-  if (score >= 0.50) return '🔴 Weak match';
-  return '🔴 Poor match';
+  if (score >= 0.9) return "🟢 Perfect match";
+  if (score >= 0.8) return "🟢 Excellent match";
+  if (score >= 0.7) return "🟡 Good match";
+  if (score >= 0.6) return "🟡 Fair match";
+  if (score >= 0.5) return "🔴 Weak match";
+  return "🔴 Poor match";
 }
 
 /**
@@ -131,9 +140,9 @@ export function formatResults(results: RetrievalResult[]): string {
   return results
     .map(
       (r, i) =>
-        `${i + 1}. [${getSimilarityLabel(r.score)}] ${r.text.substring(0, 100)}...\n   Score: ${r.score.toFixed(3)}`
+        `${i + 1}. [${getSimilarityLabel(r.score)}] ${r.text.substring(0, 100)}...\n   Score: ${r.score.toFixed(3)}`,
     )
-    .join('\n\n');
+    .join("\n\n");
 }
 
 /**
@@ -143,7 +152,7 @@ export function formatResults(results: RetrievalResult[]): string {
 export async function querySimilarFiltered(
   query: string,
   topK: number = 3,
-  minScore: number = 0.70
+  minScore: number = 0.7,
 ): Promise<RetrievalResult[]> {
   const results = await querySimilar(query, topK * 2); // Over-fetch to account for filtering
   return results.filter((r) => r.score >= minScore).slice(0, topK);
@@ -154,20 +163,20 @@ export async function querySimilarFiltered(
 
 ```typescript
 // src/endpoints/api/search.ts
-import { Router, Request, Response } from 'express';
-import { querySimilar, formatResults } from '../../services/retrieval';
+import { Router, Request, Response } from "express";
+import { querySimilar, formatResults } from "../../services/retrieval";
 
 const router = Router();
 
 /**
  * POST /api/search
- * 
+ *
  * Request body:
  * {
  *   "query": "What is machine learning?",
  *   "topK": 3
  * }
- * 
+ *
  * Response:
  * {
  *   "query": "What is machine learning?",
@@ -181,18 +190,18 @@ const router = Router();
  *   ]
  * }
  */
-router.post('/', async (req: Request, res: Response) => {
+router.post("/", async (req: Request, res: Response) => {
   const { query, topK = 3 } = req.body;
-  
+
   // Validate input
   if (!query) {
-    return res.status(400).json({ error: 'query required' });
+    return res.status(400).json({ error: "query required" });
   }
-  
-  if (typeof topK !== 'number' || topK < 1 || topK > 100) {
-    return res.status(400).json({ error: 'topK must be 1-100' });
+
+  if (typeof topK !== "number" || topK < 1 || topK > 100) {
+    return res.status(400).json({ error: "topK must be 1-100" });
   }
-  
+
   try {
     const results = await querySimilar(query, topK);
     return res.json({
@@ -202,9 +211,9 @@ router.post('/', async (req: Request, res: Response) => {
       results,
     });
   } catch (error) {
-    console.error('Search error:', error);
+    console.error("Search error:", error);
     return res.status(500).json({
-      error: error instanceof Error ? error.message : 'Search failed',
+      error: error instanceof Error ? error.message : "Search failed",
     });
   }
 });
@@ -217,6 +226,7 @@ export default router;
 ## Testing
 
 ### Test 1: Basic functionality
+
 ```bash
 # Start dev server
 npm run dev
@@ -243,6 +253,7 @@ curl -X POST http://localhost:5000/api/search \
 ```
 
 ### Test 2: Various queries to understand semantics
+
 ```bash
 # Semantic similarity (not keyword matching)
 curl -X POST http://localhost:5000/api/search \
@@ -261,6 +272,7 @@ curl -X POST http://localhost:5000/api/search \
 ```
 
 ### Success Criteria
+
 - ✅ Query is embedded without errors
 - ✅ Results returned with scores
 - ✅ Scores in range 0.0-1.0
@@ -273,6 +285,7 @@ curl -X POST http://localhost:5000/api/search \
 ## Cosine Similarity Explained
 
 ### The Math (Simple Version)
+
 ```
 Similarity = (A · B) / (||A|| × ||B||)
 
@@ -289,6 +302,7 @@ Result range: -1.0 to 1.0
 ```
 
 ### Visual Example
+
 ```
 Query: "machine learning"
   ↓ (embed)
@@ -307,12 +321,13 @@ Doc C: "deep learning frameworks"
 
 ### Why Cosine, Not Euclidean Distance?
 
-| Metric | What it measures | Best for | Range |
-|--------|------------------|----------|-------|
-| **Cosine similarity** | Angle between vectors | Text embeddings | 0-1 |
-| **Euclidean distance** | Straight-line distance | Spatial data | 0-∞ |
+| Metric                 | What it measures       | Best for        | Range |
+| ---------------------- | ---------------------- | --------------- | ----- |
+| **Cosine similarity**  | Angle between vectors  | Text embeddings | 0-1   |
+| **Euclidean distance** | Straight-line distance | Spatial data    | 0-∞   |
 
 **For embeddings:** Cosine is better because:
+
 - Normalized embeddings have length 1
 - Only direction matters, not magnitude
 - Gives 0-1 range (easier interpretation)
@@ -323,6 +338,7 @@ Doc C: "deep learning frameworks"
 ## topK Parameter Tuning
 
 ### What topK means
+
 ```
 topK = 3 means: "Give me the 3 most similar documents"
 
@@ -333,12 +349,12 @@ topK = 10 → Top 10 (comprehensive, slower)
 
 ### Guidance by use case
 
-| Use case | topK | Why |
-|----------|------|-----|
-| Quick answer | 1-2 | Speed, highest confidence |
-| Q&A system | 3-5 | Good balance of context + precision |
-| Research | 5-10 | Multiple perspectives |
-| Keyword search fallback | 10+ | Recovery mode |
+| Use case                | topK | Why                                 |
+| ----------------------- | ---- | ----------------------------------- |
+| Quick answer            | 1-2  | Speed, highest confidence           |
+| Q&A system              | 3-5  | Good balance of context + precision |
+| Research                | 5-10 | Multiple perspectives               |
+| Keyword search fallback | 10+  | Recovery mode                       |
 
 ### Real-world impact
 
@@ -359,6 +375,7 @@ topK=10: Returns many results
 ```
 
 ### How to choose:
+
 1. **Start with topK=3** (industry standard)
 2. **If answers lack context** → increase to 5
 3. **If answers seem noisy** → decrease to 2
@@ -403,10 +420,10 @@ Score <0.60      "Weak/Poor match"
 ```typescript
 // Strict quality filter
 const results = await querySimilar(query, topK);
-const highQuality = results.filter(r => r.score > 0.85);
+const highQuality = results.filter((r) => r.score > 0.85);
 
 // Confidence-based answers
-if (results[0].score > 0.90) {
+if (results[0].score > 0.9) {
   return `High confidence: ${answer}`;
 } else if (results[0].score > 0.75) {
   return `Moderate confidence: ${answer}`;
@@ -415,9 +432,9 @@ if (results[0].score > 0.90) {
 }
 
 // Relevance-based filtering
-const relevantResults = results.filter(r => r.score > minScore);
+const relevantResults = results.filter((r) => r.score > minScore);
 if (relevantResults.length === 0) {
-  return 'No sufficiently relevant results found';
+  return "No sufficiently relevant results found";
 }
 ```
 
@@ -426,66 +443,61 @@ if (relevantResults.length === 0) {
 ## Common Patterns
 
 ### Pattern 1: Score-based confidence
+
 ```typescript
-export async function searchWithConfidence(
-  query: string,
-  topK: number = 3
-) {
+export async function searchWithConfidence(query: string, topK: number = 3) {
   const results = await querySimilar(query, topK);
-  
+
   if (results.length === 0) {
-    return { confidence: 'none', results: [] };
+    return { confidence: "none", results: [] };
   }
-  
+
   const topScore = results[0].score;
-  let confidence = 'low';
-  
-  if (topScore >= 0.90) confidence = 'high';
-  else if (topScore >= 0.75) confidence = 'medium';
-  
+  let confidence = "low";
+
+  if (topScore >= 0.9) confidence = "high";
+  else if (topScore >= 0.75) confidence = "medium";
+
   return { confidence, results };
 }
 ```
 
 ### Pattern 2: Threshold filtering
+
 ```typescript
 export async function searchMinimumQuality(
   query: string,
   minScore: number = 0.75,
-  maxResults: number = 3
+  maxResults: number = 3,
 ) {
   // Fetch more to compensate for filtering
   const candidates = await querySimilar(query, maxResults * 3);
-  
+
   // Keep only high-quality results
-  return candidates
-    .filter(r => r.score >= minScore)
-    .slice(0, maxResults);
+  return candidates.filter((r) => r.score >= minScore).slice(0, maxResults);
 }
 ```
 
 ### Pattern 3: Result diversity
+
 ```typescript
 // Avoid returning very similar documents
-export async function searchDiverse(
-  query: string,
-  topK: number = 3
-) {
+export async function searchDiverse(query: string, topK: number = 3) {
   const results = await querySimilar(query, topK * 2);
   const selected: RetrievalResult[] = [];
-  
+
   for (const result of results) {
     // Check if too similar to already selected
-    const tooSimilar = selected.some(
-      r => areSimilar(result.text, r.text, 0.95)
+    const tooSimilar = selected.some((r) =>
+      areSimilar(result.text, r.text, 0.95),
     );
-    
+
     if (!tooSimilar) {
       selected.push(result);
       if (selected.length === topK) break;
     }
   }
-  
+
   return selected;
 }
 ```
@@ -494,20 +506,21 @@ export async function searchDiverse(
 
 ## Troubleshooting
 
-| Problem | Cause | Solution |
-|---------|-------|----------|
-| "No results returned" | Empty index | Verify documents are seeded (Task 03) |
-| "All scores < 0.5" | Semantic mismatch | Query doesn't match documents, try different phrasing |
-| "Timeout after 30s" | Slow Pinecone | Reduce topK or check network |
-| "Dimension mismatch" | Different embedding model | Ensure same model (text-embedding-3-small) for query and docs |
-| "Inconsistent scores" | Non-deterministic behavior | Scores should be consistent for same query |
-| "Expected doc not found" | Wrong document ID format | Verify doc IDs during seeding match query results |
+| Problem                  | Cause                      | Solution                                                      |
+| ------------------------ | -------------------------- | ------------------------------------------------------------- |
+| "No results returned"    | Empty index                | Verify documents are seeded (Task 03)                         |
+| "All scores < 0.5"       | Semantic mismatch          | Query doesn't match documents, try different phrasing         |
+| "Timeout after 30s"      | Slow Pinecone              | Reduce topK or check network                                  |
+| "Dimension mismatch"     | Different embedding model  | Ensure same model (text-embedding-3-small) for query and docs |
+| "Inconsistent scores"    | Non-deterministic behavior | Scores should be consistent for same query                    |
+| "Expected doc not found" | Wrong document ID format   | Verify doc IDs during seeding match query results             |
 
 ---
 
 ## Performance Tuning
 
 ### Latency optimization
+
 ```typescript
 // Parallel embedding + search (doesn't help, serialized)
 // Instead: Reduce topK for faster response
@@ -515,6 +528,7 @@ export async function searchDiverse(
 ```
 
 ### Cost optimization
+
 ```typescript
 // Embed query: ~$0.000001 per call
 // Search: Free (Pinecone pricing)
@@ -535,6 +549,7 @@ export async function searchDiverse(
 ## Next Steps
 
 **After this task:**
+
 1. Move to Task 05 to see how retrieval fits into RAG
 2. Return to Task 04 tuning after Task 07 (evaluation)
 3. Implement advanced retrieval in Task 08
@@ -546,6 +561,7 @@ export async function searchDiverse(
 - **vector-search.md** → Fill "How" section with query and similarity search patterns
 
 **Tutorial focus:**
+
 - How = Pinecone query, embedding queries, similarity search mechanics
 - Gotchas = cosine similarity interpretation, topK selection, no results scenarios
 - Trade-offs = speed vs comprehensiveness, precision vs recall

@@ -1,4 +1,8 @@
-# Task 07 — Eval Retrieval [ENHANCED]
+---
+notes: Read `../_meta_.md` as instruction before take task actions
+---
+
+# Task 07 — Eval Retrieval [advanced]
 
 ## Goal
 
@@ -9,6 +13,7 @@ Establish systematic evaluation methods to measure retrieval quality, understand
 ## Learning Outcomes
 
 After completing this task, you'll understand:
+
 - **How to measure retrieval quality systematically** — Beyond gut feeling
 - **Evaluation metrics** — Precision, Recall, MRR, NDCG explained
 - **Test case design** — Creating meaningful evaluation datasets
@@ -21,17 +26,20 @@ After completing this task, you'll understand:
 ## Requirements
 
 **Create evaluation dataset:**
+
 - 5-10 test queries
 - Expected relevant documents for each query
 - Ground truth labels (which docs should be retrieved)
 
 **Calculate metrics:**
+
 - **Precision@K** — Of K results, how many are relevant?
 - **Recall@K** — Of all relevant docs, how many did we find?
 - **MRR** — Mean Reciprocal Rank (how quickly we find first relevant)
 - **NDCG** — Normalized Discounted Cumulative Gain (overall ranking quality)
 
 **Output:**
+
 - Per-query evaluation results
 - Summary metrics
 - Pass/fail assessment
@@ -43,12 +51,13 @@ After completing this task, you'll understand:
 **File:** `/evals/retrieval.test.ts`
 
 **Core Interfaces:**
+
 ```typescript
 export interface TestCase {
   id: string;
   query: string;
-  expectedDocs: string[];  // Document IDs that should be retrieved
-  explanation?: string;    // Why these docs are relevant
+  expectedDocs: string[]; // Document IDs that should be retrieved
+  explanation?: string; // Why these docs are relevant
 }
 
 export interface EvalResult {
@@ -71,7 +80,7 @@ export interface EvalResult {
 
 ```typescript
 // evals/retrieval.test.ts
-import { querySimilar } from '../src/services/retrieval';
+import { querySimilar } from "../src/services/retrieval";
 
 /**
  * Test cases must match your seeded documents
@@ -92,28 +101,46 @@ export interface TestCase {
 
 export const testCases: TestCase[] = [
   {
-    id: 'test-ml-definition',
-    query: 'What is machine learning?',
-    expectedDocs: ['doc-1'],
-    explanation: 'Directly about ML definition',
+    id: "test-ml-definition",
+    query: "What is machine learning?",
+    expectedDocs: ["doc-1"],
+    explanation: "Directly about ML definition",
   },
   {
-    id: 'test-vector-db',
-    query: 'How do vector databases work?',
-    expectedDocs: ['doc-2'],
-    explanation: 'Core topic of vector databases',
+    id: "test-vector-db",
+    query: "How do vector databases work?",
+    expectedDocs: ["doc-2"],
+    explanation: "Core topic of vector databases",
   },
   {
-    id: 'test-embeddings-concept',
-    query: 'What are embeddings?',
-    expectedDocs: ['doc-3'],
-    explanation: 'Embeddings definition',
+    id: "test-embeddings-concept",
+    query: "What are embeddings?",
+    expectedDocs: ["doc-3"],
+    explanation: "Embeddings definition",
   },
   {
-    id: 'test-rag-pipeline',
-    query: 'Tell me about RAG systems',
-    expectedDocs: ['doc-4'],
-    explanation: 'RAG is the topic',
+    id: "test-rag-pipeline",
+    query: "Tell me about RAG systems",
+    expectedDocs: ["doc-4"],
+    explanation: "RAG is the topic",
   },
-  {\n    id: 'test-semantic-search',\n    query: 'How to search semantically?',\n    expectedDocs: ['doc-5', 'doc-2', 'doc-3'],\n    explanation: 'Semantic search relies on embeddings and vector search',\n  },\n  {\n    id: 'test-ai-learning',\n    query: 'AI that learns from examples',\n    expectedDocs: ['doc-1'],\n    explanation: 'Semantic match to ML definition (not keyword match)',\n  },\n  {\n    id: 'test-vector-similarity',\n    query: 'Finding similar content with vectors',\n    expectedDocs: ['doc-2', 'doc-5'],\n    explanation: 'Vector similarity is core to both',\n  },\n];
+  {
+    id: "test-semantic-search",
+    query: "How to search semantically?",
+    expectedDocs: ["doc-5", "doc-2", "doc-3"],
+    explanation: "Semantic search relies on embeddings and vector search",
+  },
+  {
+    id: "test-ai-learning",
+    query: "AI that learns from examples",
+    expectedDocs: ["doc-1"],
+    explanation: "Semantic match to ML definition (not keyword match)",
+  },
+  {
+    id: "test-vector-similarity",
+    query: "Finding similar content with vectors",
+    expectedDocs: ["doc-2", "doc-5"],
+    explanation: "Vector similarity is core to both",
+  },
+];
 ```

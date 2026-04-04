@@ -33,11 +33,5 @@ With architecture loaded:
 - Document any deviations or additions to architecture
 - Ensure all code follows established patterns and constraints
 
-## Memory Integration
-Once Memory MCP is connected, store key architectural decisions in Memory MCP for:
-- Critical system design choices
-- Performance constraints and limits
-- Integration patterns and APIs
-- Error handling strategies
 
 This ensures architectural consistency across distributed chat sessions while maintaining the minimal RAG MVP focus.

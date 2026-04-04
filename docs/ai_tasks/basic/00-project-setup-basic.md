@@ -9,6 +9,7 @@ Initialize a production-ready TypeScript project with essential AI/vector depend
 ## Learning Outcomes
 
 After this task, you'll understand:
+
 - Why each dependency is needed for RAG systems
 - How to configure environment variables safely
 - Local development workflow with Firebase emulators
@@ -19,6 +20,7 @@ After this task, you'll understand:
 ## Requirements
 
 ### Core Dependencies
+
 - **openai** — Generate embeddings and LLM responses
 - **@pinecone-database/pinecone** — Vector database operations
 - **firebase-admin** — Cloud Functions SDK
@@ -27,6 +29,7 @@ After this task, you'll understand:
 - **dotenv** — Environment variable management
 
 ### Dev Dependencies
+
 - **typescript** — Type safety
 - **firebase-tools** — Local emulation & deployment
 
@@ -35,12 +38,14 @@ After this task, you'll understand:
 ## Implementation Steps
 
 1. **Navigate to functions directory**
+
    ```bash
    cd functions
    npm install
    ```
 
 2. **Configure environment variables**
+
    ```bash
    cp .env.sample .env
    # Edit .env with:
@@ -51,6 +56,7 @@ After this task, you'll understand:
    ```
 
 3. **Verify TypeScript compilation**
+
    ```bash
    npm run build
    # Check: lib/ directory created successfully
@@ -67,6 +73,7 @@ After this task, you'll understand:
 ## Testing
 
 ✅ **Success criteria:**
+
 - `npm install` completes without errors
 - `npm run build` creates `lib/` directory
 - `npm run dev` starts emulator (watch for: "listening at")
@@ -77,15 +84,18 @@ After this task, you'll understand:
 ## Common Issues
 
 **Node version mismatch**
+
 - Required: Node 24 (see package.json engines)
 - Check: `node --version`
 - Fix: Use nvm: `nvm use 24`
 
 **Missing environment variables**
+
 - Error: "Cannot find OPENAI_API_KEY"
 - Fix: Verify .env file exists in `functions/` directory
 
 **Port already in use**
+
 - Error: "address already in use :5000"
 - Fix: `lsof -ti:5000 | xargs kill -9`
 
