@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import logger from '../../services/firebase/logger';
-import { embeddingService } from '../../services/embedding';
+import { embeddingService } from '../../adapters/openai/embedding';
 import { validateEmbedRequest } from '../../utils/validation';
 
 /**

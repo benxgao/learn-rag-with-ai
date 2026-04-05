@@ -1,25 +1,24 @@
-import { openAIAdapter } from '../adapters/openai';
-import logger from '../services/firebase/logger';
+import { openAIAdapter } from './index';
+import logger from '../../services/firebase/logger';
 
-/** Description: Embedding service for text vectorization | Sample: IN "hello world" -> OUT [0.1, 0.2, ...] */
+/**
+ * Embedding Service
+ * Handles text vectorization with metrics and batch processing
+ * Uses OpenAI's embedding model
+ */
 export class EmbeddingService {
-
-  /** Estimate tokens in text (rough approximation: 1 token ≈ 4 characters) */
   private estimateTokens(text: string): number {
     return Math.ceil(text.length / 4);
   }
 
-  /** Estimate cost of embedding request (Pricing: $0.02 per 1M input tokens) */
   private estimateCost(text: string): number {
     const tokens = this.estimateTokens(text);
     const costPerToken = 0.02 / 1_000_000;
     return tokens * costPerToken;
   }
 
-  /** Creates embedding vector from text input with validation and error handling */
   async createEmbedding(text: string): Promise<number[]> {
     try {
-      // Input validation
       if (!text || typeof text !== 'string') {
         throw new Error('Text must be a non-empty string');
       }
@@ -29,7 +28,6 @@ export class EmbeddingService {
         throw new Error('Text cannot be empty or whitespace only');
       }
 
-      // Rate limit protection: enforce max length
       if (trimmedText.length > 100000) {
         throw new Error(`Text too long (max 100,000 characters). Got ${trimmedText.length}`);
       }
@@ -39,7 +37,6 @@ export class EmbeddingService {
         firstChars: trimmedText.substring(0, 50)
       });
 
-      // Create embedding using OpenAI adapter
       const embedding = await openAIAdapter.createEmbedding(trimmedText);
 
       logger.info('Embedding created successfully', {
@@ -51,16 +48,14 @@ export class EmbeddingService {
       return embedding;
     } catch (error) {
       logger.error(`Error in EmbeddingService.createEmbedding: ${error}`);
-      throw error; // Re-throw to let caller handle
+      throw error;
     }
   }
 
-  /** Get embedding model information */
   getModelInfo(): { model: string; dimensions: number } {
     return openAIAdapter.getModelInfo();
   }
 
-  /** Create embedding with detailed metrics (tokens, cost, duration) */
   async createEmbeddingWithMetrics(
     text: string
   ): Promise<{
@@ -87,7 +82,6 @@ export class EmbeddingService {
     return { embedding, tokens, cost, duration };
   }
 
-  /** Batch create embeddings (processes sequentially with rate limiting) */
   async createEmbeddingsBatch(
     texts: string[],
     delayMs: number = 100
@@ -100,7 +94,6 @@ export class EmbeddingService {
       const text = texts[i];
       embeddings.push(await this.createEmbedding(text));
 
-      // Rate limiting: space out requests
       if (i < texts.length - 1) {
         await new Promise(resolve => setTimeout(resolve, delayMs));
       }
@@ -111,5 +104,4 @@ export class EmbeddingService {
   }
 }
 
-// Export singleton instance
 export const embeddingService = new EmbeddingService();

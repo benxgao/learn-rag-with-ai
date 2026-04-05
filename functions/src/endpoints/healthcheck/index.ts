@@ -1,6 +1,6 @@
 import { Router as createRouter } from 'express';
 import logger from '../../services/firebase/logger';
-import { getIndex } from '../../adapters/pinecone';
+import { getPineconeClient, checkIndexHealth } from '../../adapters/pinecone';
 
 const router = createRouter();
 
@@ -22,17 +22,20 @@ router.get('/', async (_req, res): Promise<void> => {
     }
 
     // Test Pinecone connection
-    await getIndex();
+    getPineconeClient();
+    const health = await checkIndexHealth();
 
     logger.info('Healthcheck endpoint hit', {
       pinecone: 'connected',
-      indexName: process.env.PINECONE_INDEX_NAME
+      indexName: process.env.PINECONE_INDEX_NAME,
+      ...health
     });
 
     res.json({
       status: 'ok',
       pinecone: 'connected',
-      indexName: process.env.PINECONE_INDEX_NAME
+      indexName: process.env.PINECONE_INDEX_NAME,
+      ...health
     });
   } catch (error) {
     logger.error('Healthcheck failed:', { error });

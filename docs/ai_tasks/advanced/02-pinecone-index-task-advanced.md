@@ -49,153 +49,23 @@ export async function deleteIndex(name?:string): Promise<void>
 
 ---
 
-## 4. Implementation
+## 4. Key Knowledge
 
-### 4.1 Client Adapter (cheap singleton)
-
-```ts
-// src/adapters/pinecone.ts
-import { Pinecone } from '@pinecone-database/pinecone';
-
-let client: Pinecone | null = null;
-
-export function getPineconeClient(): Pinecone {
-  if (client) return client;
-
-  const key = process.env.PINECONE_API_KEY;
-  if (!key || key.length < 20) throw new Error('Missing/short PINECONE_API_KEY');
-
-  client = new Pinecone({
-    apiKey: key,
-    environment: process.env.PINECONE_ENVIRONMENT ?? 'us-east-1-aws',
-  });
-  console.log('✓ Pinecone client initialized');
-  return client;
-}
-
-export function resetPineconeClient(): void { client = null; }
-```
-
-### 4.2 Index Lifecycle
-
-```ts
-// src/services/index.ts
-import { getPineconeClient } from '../adapters/pinecone';
-
-const CFG = {
-  name: process.env.PINECONE_INDEX_NAME ?? 'rag-documents',
-  dimension: 1536,
-  metric: 'cosine' as const,
-};
-
-export async function getOrCreateIndex() {
-  const pc = getPineconeClient();
-  const { name } = CFG;
-
-  // 1. Exists?
-  const idxList = await pc.listIndexes();
-  const existing = idxList.find(i => i.name === name);
-  if (existing) return existing;
-
-  // 2. Create
-  await pc.createIndex({
-    name,
-    dimension: CFG.dimension,
-    metric: CFG.metric,
-    spec: { serverless: { cloud: 'aws', region: 'us-east-1' } },
-  });
-
-  // 3. Wait ready (poll 30×2 s)
-  for (let i = 0; i < 30; i++) {
-    const idx = (await pc.listIndexes()).find(i => i.name === name);
-    if (idx?.status?.state === 'Ready') return idx;
-    await new Promise(r => setTimeout(r, 2000));
-  }
-  throw new Error('Index creation timeout');
-}
-
-export async function checkIndexHealth(name = CFG.name) {
-  const stats = await getPineconeClient().Index(name).describeIndexStats();
-  return { healthy: true, totalVectors: stats.totalVectorCount ?? 0 };
-}
-
-export async function deleteIndex(name = CFG.name) {
-  if (process.env.CONFIRM_DELETE !== 'true')
-    throw new Error('Set CONFIRM_DELETE=true to nuke');
-  await getPineconeClient().deleteIndex(name);
-}
-```
-
-### 4.3 Typed Index Wrapper (for Task 03)
-
-```ts
-// src/services/index-client.ts
-import { getPineconeClient } from '../adapters/pinecone';
-
-export const INDEX_NAME = process.env.PINECONE_INDEX_NAME ?? 'rag-documents';
-
-export function getIndexClient() {
-  return getPineconeClient().Index(INDEX_NAME);
-}
-
-export interface VectorMetadata {
-  text: string;
-  documentId: string;
-  chunkIndex: number;
-  source?: string;
-  timestamp?: number;
-}
-
-export interface UpsertVector {
-  id: string;
-  values: number[];        // 1536-d
-  metadata?: VectorMetadata;
-}
-```
-
----
-
-## 5. Quick Test
-
-```bash
-export PINECONE_API_KEY="pcsk_..."
-export PINECONE_INDEX_NAME="test-index"
-
-npx ts-node -e '
-import{getOrCreateIndex,checkIndexHealth} from"./src/services/index";
-(async()=>{
-  const i=await getOrCreateIndex();
-  console.log("✓",i.name,i.dimension,i.metric);
-  console.log("✓ health",await checkIndexHealth());
-})()'
-```
-
-Expect:
-
-```
-✓ test-index 1536 cosine
-✓ health { healthy: true, totalVectors: 0 }
-```
-
----
-
-## 6. Key Knowledge
-
-### 6.1 HNSW in One Line  
+### 4.1 HNSW in One Line  
 Builds a layered graph → greedy hops → O(log n) recall.
 
-### 6.2 Metric Cheat-Sheet  
+### 4.2 Metric Cheat-Sheet  
 - **cosine** — angle (use for embeddings)  
 - **euclidean** — distance (use for coordinates)  
 - **dotproduct** — projection (only if already unit vectors)
 
-### 6.3 Cost  
+### 4.3 Cost  
 Free: 1 index, 100 k vectors, ∞ queries → $0.  
 Next tier: ~$0.10 per 100 k vectors + ¢ per query.
 
 ---
 
-## 7. Gotchas
+## 5. Common Issues
 
 | Symptom | Fix |
 |---------|-----|
@@ -206,11 +76,12 @@ Next tier: ~$0.10 per 100 k vectors + ¢ per query.
 
 ---
 
-## 8. Next
+## 6. Next Steps
 
-Task 03 → upsert OpenAI embeddings into this index.
-Task 04: Query the index for similarity search
-Task 05: Use search in RAG pipeline
+**Sequence:**  
+Task 03 → upsert OpenAI embeddings into this index.  
+Task 04 → query the index for similarity search  
+Task 05 → use search in RAG pipeline
 
 **To deepen understanding:**
 - Read HNSW paper (Malkov & Yashunin)
@@ -220,9 +91,9 @@ Task 05: Use search in RAG pipeline
 
 ---
 
-## Tutorial Trigger
+## 7. Tutorial Trigger
 
-- **pinecone.md** → Fill \"Implementation\" section with index management patterns
+- **pinecone.md** → Fill "Implementation" section with index management patterns
 
 Tutorial focus:
 - What = Vector databases: why they exist, how they work

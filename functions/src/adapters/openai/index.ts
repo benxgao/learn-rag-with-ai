@@ -1,16 +1,10 @@
 import OpenAI from 'openai';
-import { appConfig } from '../config';
-import logger from '../services/firebase/logger';
-import { EmbeddingError } from '../types/errors';
+import { appConfig } from '../../config';
+import logger from '../../services/firebase/logger';
+import { EmbeddingError } from '../../types/errors';
 
 /**
  * Singleton OpenAI client
- *
- * Why singleton?
- * - Connection pooling: Reuses HTTP connections
- * - Rate limit awareness: Single point for tracking limits
- * - Cost tracking: Centralized token counting
- * - Thread-safe: One client per process
  */
 let client: OpenAI | null = null;
 
@@ -34,8 +28,8 @@ function getOpenAIClient(): OpenAI {
 
     client = new OpenAI({
       apiKey,
-      timeout: 30000, // 30 second timeout
-      maxRetries: 2,  // Retry on transient failures
+      timeout: 30000,
+      maxRetries: 2,
     });
 
     logger.info('✓ OpenAI client initialized');
@@ -44,27 +38,24 @@ function getOpenAIClient(): OpenAI {
   return client;
 }
 
-/**
- * Reset client (useful for testing)
- */
 export function resetOpenAIClient(): void {
   client = null;
 }
 
-/** Description: OpenAI embedding adapter | Sample: IN "hello world" -> OUT [0.1, 0.2, ...] */
+/**
+ * OpenAI Embedding Adapter
+ * Handles direct communication with OpenAI embedding API
+ */
 export class OpenAIAdapter {
   private model = 'text-embedding-3-small';
   private dimensions = 1536;
 
-  /** Creates embedding vector from text input */
   async createEmbedding(text: string): Promise<number[]> {
     try {
-      // Validate input
       if (!text || text.trim().length === 0) {
         throw new Error('Text input cannot be empty');
       }
 
-      // Rate limit protection: check text length
       if (text.length > 100000) {
         throw new Error(`Text input too long (max 100,000 characters). Got ${text.length}`);
       }
@@ -102,7 +93,6 @@ export class OpenAIAdapter {
     }
   }
 
-  /** Get embedding model info */
   getModelInfo(): { model: string; dimensions: number } {
     return {
       model: this.model,
@@ -111,8 +101,5 @@ export class OpenAIAdapter {
   }
 }
 
-// Export singleton instance
 export const openAIAdapter = new OpenAIAdapter();
-
-// Export client getter for direct access if needed
 export { getOpenAIClient };
