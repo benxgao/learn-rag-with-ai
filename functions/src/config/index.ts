@@ -9,16 +9,15 @@ export const appConfig = {
   },
   openai: {
     apiKey: process.env.OPENAI_API_KEY,
+    dimension: 1536,
     timeout: 30000,
   },
   pinecone: {
     apiKey: process.env.PINECONE_API_KEY,
-    indexName: process.env.PINECONE_INDEX_NAME,
-    environment: process.env.PINECONE_ENVIRONMENT,
+    hostUrl: process.env.PINECONE_HOST_URL,
+    indexName: process.env.PINECONE_INDEX_NAME || 'default',
   },
   firebase: process.env.FIREBASE_PROJECT_ID
     ? { projectId: process.env.FIREBASE_PROJECT_ID, }
     : null,
 };
-
-export { appConstants } from './constants';

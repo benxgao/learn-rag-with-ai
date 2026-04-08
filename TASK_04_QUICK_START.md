@@ -10,7 +10,7 @@ First, run Task 03 to populate Pinecone with documents:
 npm run dev
 
 # In another terminal, upsert sample data
-curl -X POST http://localhost:5001/PROJECT/us-central1/api/upsert \
+curl -X POST http://localhost:5001/pinecone-ai-starter/us-central1/endpoints/api/upsert \
   -H "Content-Type: application/json" \
   -H "auth_token: test" \
   -d '{
@@ -38,7 +38,7 @@ Expected response: `{ "status": "success", "metrics": { "vectorsUpserted": 3 } }
 
 ### 2. Test Search Endpoint
 ```bash
-curl -X POST http://localhost:5001/PROJECT/us-central1/api/search \
+curl -X POST http://localhost:5001/pinecone-ai-starter/us-central1/endpoints/api/search \
   -H "Content-Type: application/json" \
   -H "auth_token: test" \
   -d '{"query": "What is machine learning?", "topK": 3}'
@@ -288,7 +288,7 @@ async function safeSearch(query: string) {
 
 ### Test Specific Query
 ```bash
-curl -X POST http://localhost:5001/PROJECT/us-central1/api/search \
+curl -X POST http://localhost:5001/pinecone-ai-starter/us-central1/endpoints/api/search \
   -H "Content-Type: application/json" \
   -H "auth_token: test" \
   -d '{"query": "YOUR_QUERY_HERE", "topK": 3}'
@@ -297,7 +297,7 @@ curl -X POST http://localhost:5001/PROJECT/us-central1/api/search \
 ### Monitor Performance
 ```bash
 # Time a single request
-time curl -X POST http://localhost:5001/PROJECT/us-central1/api/search ...
+time curl -X POST http://localhost:5001/pinecone-ai-starter/us-central1/endpoints/api/search ...
 
 # Check OpenAI rate limits
 tail -f /path/to/logs | grep "Creating embedding"

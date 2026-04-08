@@ -204,7 +204,7 @@ This metadata helps Task 04 provide context and filtering.
 npm run dev
 
 # In another terminal, upsert sample data
-curl -X POST http://localhost:5001/PROJECT/us-central1/api/upsert \
+curl -X POST http://localhost:5001/pinecone-ai-starter/us-central1/endpoints/api/upsert \
   -H "Content-Type: application/json" \
   -H "auth_token: test" \
   -d '@sample-upsert-request.json'
@@ -233,7 +233,7 @@ Once Task 04 is implemented:
 
 ```bash
 # Query similarity should find docs similar to "machine learning"
-curl -X POST http://localhost:5001/PROJECT/us-central1/api/search \
+curl -X POST http://localhost:5001/pinecone-ai-starter/us-central1/endpoints/api/search \
   -H "Content-Type: application/json" \
   -H "auth_token: test" \
   -d '{

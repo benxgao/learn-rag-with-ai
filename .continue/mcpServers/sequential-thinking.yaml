@@ -1,0 +1,14 @@
+name: Sequential Thinking MCP Server
+version: 1.0.0
+schema: v1
+mcpServers:
+  - name: sequential-thinking
+    command: npx
+    args:
+      - -y
+      - "@modelcontextprotocol/server-sequential-thinking"
+    env:
+      MAX_DEPTH: "10"
+      THOUGHT_TIMEOUT_MS: "30000"
+      ENABLE_PERSISTENCE: "true"
+      PERSISTENCE_FILE: ".continue/thinking.json"

@@ -112,17 +112,17 @@ Task 04 builds on Task 03 (Upsert Data):
 ### Manual Testing with curl
 ```bash
 # Get sample queries
-curl -X GET http://localhost:5001/PROJECT/us-central1/api/search/sample \
+curl -X GET http://localhost:5001/pinecone-ai-starter/us-central1/endpoints/api/search/sample \
   -H "auth_token: test"
 
 # Basic search
-curl -X POST http://localhost:5001/PROJECT/us-central1/api/search \
+curl -X POST http://localhost:5001/pinecone-ai-starter/us-central1/endpoints/api/search \
   -H "Content-Type: application/json" \
   -H "auth_token: test" \
   -d '{"query": "What is machine learning?", "topK": 3}'
 
 # Search with filtering
-curl -X POST http://localhost:5001/PROJECT/us-central1/api/search \
+curl -X POST http://localhost:5001/pinecone-ai-starter/us-central1/endpoints/api/search \
   -H "Content-Type: application/json" \
   -H "auth_token: test" \
   -d '{"query": "embeddings", "topK": 5, "minScore": 0.75}'

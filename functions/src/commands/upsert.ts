@@ -36,17 +36,12 @@ async function main() {
 
     const metrics = await upsertDocuments(documents, {
       batchSize: 50,
-      rateLimitMs: 200, // Conservative rate for API limits
     });
 
     console.log('\n    📊 Final Metrics:');
-    console.log(`  Loaded:          ${metrics.documentsLoaded}`);
-    console.log(`  Embedded:        ${metrics.documentsEmbedded}`);
     console.log(`  Upserted:        ${metrics.vectorsUpserted}`);
     console.log(`  Failed:          ${metrics.failedCount}`);
     console.log(`  Duration:        ${(metrics.totalTime / 1000).toFixed(1)}s`);
-    console.log(`  Embedding cost:  $${metrics.embeddingCost.toFixed(6)}`);
-    console.log(`  Monthly storage: $${metrics.storageCost.toFixed(6)}`);
   } catch (error) {
     console.error('Upsert failed:', error);
     process.exit(1);

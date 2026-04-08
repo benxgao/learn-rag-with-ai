@@ -1,0 +1,13 @@
+name: Memory MCP Server
+version: 1.0.0
+schema: v1
+mcpServers:
+  - name: memory
+    command: npx
+    args:
+      - -y
+      - "@modelcontextprotocol/server-memory"
+    env:
+      MEMORY_FILE_PATH: ".continue/memory.json"
+      MEMORY_MAX_ENTRIES: "1000"
+      MEMORY_COMPRESSION_THRESHOLD: "100"

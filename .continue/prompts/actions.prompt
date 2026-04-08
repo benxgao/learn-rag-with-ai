@@ -14,10 +14,9 @@ Before starting ANY tasks related to `/docs/ai_tasks/.task_actions`, you MUST lo
 
 ## Architecture Files to Load
 - `README.md` - Project overview and purpose
-- `system-design.md` - Technical architecture
+- `system-architecture.md` - Technical architecture
 - `api-design.md` - API specifications
-- `data-models.md` - Data structures
-- Any other `.md` files in the architecture folder
+- Any other `.md` files in the `/docs/architecture` folder
 
 ## Context Application
 After loading architecture:
@@ -35,3 +34,4 @@ With architecture loaded:
 
 
 This ensures architectural consistency across distributed chat sessions while maintaining the minimal RAG MVP focus.
+

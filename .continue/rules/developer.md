@@ -56,8 +56,8 @@ export class ServiceName {
 
 ### 4. Testing Shortcuts
 
-* Health Check: curl http://localhost:5001/YOUR_PROJECT/us-central1/healthcheck
-* Embed Test: curl -X POST http://localhost:5001/YOUR_PROJECT/us-central1/embed -H "Content-Type: application/json" -d '{"text": "test"}'
+* Health Check: curl http://localhost:5001/pinecone-ai-starter/us-central1/healthcheck
+* Embed Test: curl -X POST http://localhost:5001/pinecone-ai-starter/us-central1/embed -H "Content-Type: application/json" -d '{"text": "test"}'
 * Auth Test: Use Authorization: Bearer YOUR_TEST_TOKEN header.
 
 ### 5. Project Directory Map

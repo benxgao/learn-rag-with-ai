@@ -1,7 +1,7 @@
 import { getPineconeClient } from './client';
-import { appConstants } from '../../config';
+import { appConfig } from '../../config';
 
-const INDEX_NAME = appConstants.pinecone.defaultIndexName;
+const INDEX_NAME = appConfig.pinecone.indexName;
 
 /**
  * Get typed index client for upsert/query operations
@@ -10,7 +10,9 @@ const INDEX_NAME = appConstants.pinecone.defaultIndexName;
  * @returns Index instance for operations
  */
 export function getPineconeIndexClient() {
-  return getPineconeClient().index({ name: INDEX_NAME });
+  return getPineconeClient().index({
+    host: appConfig.pinecone.hostUrl,
+  });
 }
 
 /**

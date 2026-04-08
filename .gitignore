@@ -1,4 +1,5 @@
 .history
+.continue/mcpServers/postman.yaml
 .env
 functions/.env.yaml
 **/*/*.log

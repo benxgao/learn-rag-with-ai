@@ -2,9 +2,14 @@ import { Router as createRouter } from 'express';
 import { embedHandler } from './embed';
 import { upsertHandler, sampleUpsertDataHandler } from './upsert';
 import { searchHandler, sampleSearchQueriesHandler } from './search';
+import {
+  getIndexInfoHandler,
+  listIndexesHandler,
+  ensureIndexHandler,
+  healthCheckHandler,
+} from './status';
 
 const router = createRouter();
-
 
 /**
  * Sample request:
@@ -71,6 +76,46 @@ router.post('/search', searchHandler);
  */
 router.get('/search/sample', sampleSearchQueriesHandler);
 
+// ===== PINECONE STATUS ENDPOINTS =====
+
+/**
+ * Quick Pinecone connection health check
+ *
+ * Sample request:
+ *
+  curl -X GET http://localhost:5001/YOUR_PROJECT/us-central1/pinecone/health \
+  -H "auth_token: some_value"
+ */
+router.get('/pinecone/health', healthCheckHandler);
+
+/**
+ * Get detailed Pinecone index information
+ *
+ * Sample request:
+ *
+  curl -X GET http://localhost:5001/YOUR_PROJECT/us-central1/pinecone/info \
+  -H "auth_token: some_value"
+ */
+router.get('/pinecone/info', getIndexInfoHandler);
+
+/**
+ * List all Pinecone indexes
+ *
+ * Sample request:
+ *
+  curl -X GET http://localhost:5001/YOUR_PROJECT/us-central1/pinecone/indexes \
+  -H "auth_token: some_value"
+ */
+router.get('/pinecone/indexes', listIndexesHandler);
+
+/**
+ * Ensure Pinecone index exists (create if not exists)
+ *
+ * Sample request:
+ *
+  curl -X POST http://localhost:5001/YOUR_PROJECT/us-central1/pinecone/ensure \
+  -H "auth_token: some_value"
+ */
+router.post('/pinecone/ensure', ensureIndexHandler);
 
 export default router;
-

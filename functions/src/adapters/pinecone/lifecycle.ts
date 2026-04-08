@@ -1,11 +1,11 @@
 import { getPineconeClient } from './client';
 import logger from '../../services/firebase/logger';
-import { appConstants } from '../../config';
+import { appConfig } from '../../config';
 import { IndexConfig, IndexMetric } from './types';
 
 const CFG: IndexConfig = {
-  name: appConstants.pinecone.defaultIndexName,
-  dimension: appConstants.openai.dimension,
+  name: appConfig.pinecone.indexName,
+  dimension: appConfig.openai.dimension,
   metric: IndexMetric.cosine,
 };
 

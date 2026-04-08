@@ -1,0 +1,13 @@
+name: FileSystem MCP Server
+version: 1.0.0
+schema: v1
+mcpServers:
+  - name: filesystem
+    command: npx
+    args:
+      - -y
+      - "@modelcontextprotocol/server-filesystem"
+    env:
+      ALLOWED_DIRS: ".continue,src,docs,evals"
+      READONLY_DIRS: ""
+      MAX_FILE_SIZE_MB: "10"

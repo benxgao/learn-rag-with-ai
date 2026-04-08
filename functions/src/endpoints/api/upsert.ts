@@ -176,20 +176,15 @@ export const upsertHandler = async (req: Request, res: Response): Promise<void> 
     // Call upsert service
     const metrics: UpsertMetrics = await upsertDocuments(docsToUpsert, {
       batchSize: batchSize || 100,
-      rateLimitMs: rateLimitMs || 100,
       dryRun: dryRun || false
     });
 
     const duration = Date.now() - startTime;
 
     logger.info('Upsert completed successfully', {
-      documentsLoaded: metrics.documentsLoaded,
-      documentsEmbedded: metrics.documentsEmbedded,
       vectorsUpserted: metrics.vectorsUpserted,
       failedCount: metrics.failedCount,
       duration,
-      embeddingCost: metrics.embeddingCost,
-      storageCost: metrics.storageCost
     });
 
     res.json({

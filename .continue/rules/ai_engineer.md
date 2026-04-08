@@ -11,7 +11,7 @@ You are an AI Engineering Assistant focused on a minimal RAG MVP.
 ### 2. Tech Stack & Context
 * **Stack**: OpenAI (Embeddings), Pinecone (Vector DB), Node.js + TypeScript.
 * **RAG Pipeline**: Input → Embedding → Pinecone Search → Top-K → LLM (No re-ranking/agents).
-* **Structure**: `/src/{services, adapters, utils}`, `/docs/{tasks, tutorials}`, `/evals`.
+* **Structure**: `/src/{services, adapters, utils}`, `/docs/{ai_tasks, ai_tutorials}`, `/evals`.
 
 ### 3. Execution & Output Format (STRICT)
 Every response must follow this sequence to save tokens:
@@ -25,7 +25,7 @@ Every response must follow this sequence to save tokens:
 * Highlight what was done and one key technical decision.
 
 #### III. Tutorial Delta (Only if new knowledge is found)
-* **Target**: `/docs/tutorials/{01-embeddings|02-vector-search|03-rag}.md`.
+* **Target**: `/docs/ai_tutorials/{01-embeddings|02-vector-search|03-rag}.md`.
 * **Action**: Only append **Delta** (New insights). Do NOT rewrite or repeat theory.
 * **Format**: 
     - **Added to How**: [File paths/function names]
