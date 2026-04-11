@@ -2,6 +2,7 @@ import { Router as createRouter } from 'express';
 import { embedHandler } from './embed';
 import { upsertHandler, sampleUpsertDataHandler } from './upsert';
 import { searchHandler, sampleSearchQueriesHandler } from './search';
+import { postChunk } from './chunk';
 import {
   getIndexInfoHandler,
   listIndexesHandler,
@@ -76,6 +77,23 @@ router.post('/search', searchHandler);
   -H "auth_token: some_value"
  */
 router.get('/search/sample', sampleSearchQueriesHandler);
+
+// ===== TASK 06: CHUNKING ENDPOINTS =====
+
+/**
+ * Chunk documents using different strategies (fixed-size, sliding-window, semantic)
+ *
+ * Sample request:
+ *
+  curl -X POST http://localhost:5001/YOUR_PROJECT/us-central1/chunk \
+  -H "Content-Type: application/json" \
+  -H "auth_token: some_value" \
+  -d '{
+    "text": "Your document text here...",
+    "strategy": "compare"
+  }'
+ */
+router.post('/chunk', postChunk);
 
 // ===== PINECONE STATUS ENDPOINTS =====
 
