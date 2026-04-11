@@ -8,6 +8,7 @@ import {
   ensureIndexHandler,
   healthCheckHandler,
 } from './status';
+import ragRouter from './rag';
 
 const router = createRouter();
 
@@ -117,5 +118,21 @@ router.get('/pinecone/indexes', listIndexesHandler);
   -H "auth_token: some_value"
  */
 router.post('/pinecone/ensure', ensureIndexHandler);
+
+// ===== RAG ENDPOINTS =====
+
+/**
+ * Ask a question and get an answer grounded in the knowledge base
+ *
+ * Sample request:
+ *
+  curl -X POST http://localhost:5001/YOUR_PROJECT/us-central1/rag/ask \
+  -H "Content-Type: application/json" \
+  -H "auth_token: some_value" \
+  -d '{
+    "question": "What is machine learning?"
+  }'
+ */
+router.use('/rag', ragRouter);
 
 export default router;
