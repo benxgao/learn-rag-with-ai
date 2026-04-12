@@ -12,7 +12,9 @@
     "logs": "firebase functions:log",
     "test": "jest",
     "test:watch": "jest --watch",
-    "test:coverage": "jest --coverage"
+    "test:coverage": "jest --coverage",
+    "test:eval": "jest src/__tests__/retrieval.test.ts",
+    "eval": "ts-node --project tsconfig.dev.json scripts/run-evaluation.ts"
   },
   "engines": {
     "node": "24"
