@@ -370,4 +370,3 @@ RAG (2023)
 If you structure your course along that evolution path, it becomes:
 
 > not just a tutorial, but a **map of the field**
-
