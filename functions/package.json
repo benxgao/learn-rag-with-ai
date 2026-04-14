@@ -1,5 +1,6 @@
 {
   "name": "functions",
+  "version": "1.0.0",
   "scripts": {
     "lint": "eslint .",
     "build": "rm -rf lib && tsc",
@@ -54,5 +55,5 @@
     "typescript": "^6",
     "typescript-eslint": "^8.58.2"
   },
-  "private": true
+  "license": "MIT"
 }

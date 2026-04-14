@@ -1,4 +1,4 @@
-# Pinecone AI Starter: Learn RAG By Coding
+# Learn RAG with AI assistants
 
 > Welcome! This course helps you understand Retrieval-Augmented Generation (RAG). Whether you're new to AI or looking to deepen your understanding, these tutorials are designed to be approachable, practical, and grounded in real concepts rather than theory alone.
 
@@ -62,12 +62,14 @@ Each validation file provides **practical testing procedures** to verify your un
 This course is the product of human learning + AI collaboration:
 
 **The Human Part:**
+
 - Built this project to personally understand RAG
 - Struggled with the same concepts you might
 - Identified which explanations actually clarify confusion
 - Designed the course structure and progression
 
 **The AI Part:**
+
 - Helped refine explanations for clarity
 - Reviewed concepts for accuracy
 - Created organized structure and formatting
