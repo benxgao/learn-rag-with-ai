@@ -8,8 +8,8 @@ import { z } from 'zod';
 /** Embed endpoint request schema */
 export const embedRequestSchema = z.object({
   text: z
-    .string({ required_error: 'text is required' })
-    .min(1, 'text cannot be empty')
+    .string({ error: 'text must be a string' })
+    .min(1, 'text is required and cannot be empty')
     .max(100000, 'text exceeds 100,000 character limit'),
 });
 

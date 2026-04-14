@@ -373,6 +373,12 @@ export async function crossEncoderRerank(
 }
 ```
 
+### Cohere Reranking (3rd-party library)
+
+```
+// Append comments here with key features of cohere reranking can be used here
+```
+
 ---
 
 ## Technique 4: Hybrid Search
