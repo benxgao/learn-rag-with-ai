@@ -20,3 +20,22 @@ export type FirebaseJwtToken = {
 export type CustomRequest = Request & {
   firebase_jwt_token: FirebaseJwtToken;
 };
+
+// Query understanding types
+export type {
+  QueryRewriteRequest,
+  QueryRewriteResponse,
+  QueryClassification,
+  SubQuery,
+  DecomposedQuery,
+  QueryVariant,
+  ExpandedQuery,
+  QueryProcessingStep,
+  QueryProcessingResult,
+  EnhancedSearchRequest,
+  ProcessedQueryInfo,
+  EnhancedSearchResponse,
+  RetrievalResult,
+  QueryProcessingOptions,
+} from './query';
+export { QueryType } from './query';

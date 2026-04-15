@@ -11,6 +11,7 @@ import {
 } from './status';
 import ragRouter from './rag';
 import optimizationRouter from './optimization';
+import queryRouter from './query';
 
 const router = createRouter();
 
@@ -174,5 +175,26 @@ router.use('/rag', ragRouter);
   }'
  */
 router.use('/optimization', optimizationRouter);
+
+// ===== V2 TASK 09: QUERY UNDERSTANDING & DECOMPOSITION ENDPOINTS =====
+
+/**
+ * Enhanced semantic search with query understanding
+ * Rewrites, classifies, decomposes, and expands queries before retrieval
+ *
+ * Sample request:
+ *
+  curl -X POST http://localhost:5001/YOUR_PROJECT/us-central1/query/enhanced-search \
+  -H "Content-Type: application/json" \
+  -H "auth_token: some_value" \
+  -d '{
+    "question": "Tell me about that programming thing",
+    "useExpansion": true,
+    "decomposeLargeQueries": true,
+    "maxExpansions": 2,
+    "topK": 10
+  }'
+ */
+router.use('/query', queryRouter);
 
 export default router;
